@@ -9,7 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="alternate" type="application/json" href="data.json" title="Machine-readable findings">
 <style>
-@font-face{font-family:"AX";src:url(ATTENTIONX-Regular.woff2) format("woff2");font-display:block}
 :root{
   color-scheme:dark;
   --void:#0b0b0c;--surface:#121214;--surface-2:#18181b;--line:#242427;--line-soft:#1a1a1d;--line-strong:#5f6166;
@@ -30,7 +29,7 @@ body{margin:0;background:var(--void);color:var(--grey);font:15px/1.6 Archivo,sys
 a{color:var(--chalk);text-underline-offset:3px;text-decoration-color:var(--line-strong)}
 a:hover{text-decoration-color:var(--chalk)}
 .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
-.ax{font-family:AX,Archivo,sans-serif;text-transform:uppercase;letter-spacing:.02em;font-weight:400}
+.ax{font-family:Archivo,sans-serif;font-weight:700;letter-spacing:-.03em}
 .wrap{max-width:1320px;margin:0 auto;padding:0 20px}
 @media(min-width:768px){.wrap{padding:0 40px}}
 h2{color:var(--chalk);font-weight:600;font-size:clamp(1.6rem,3.2vw,2.4rem);line-height:1.1;letter-spacing:-.02em;margin:0 0 14px;max-width:26ch}
@@ -55,7 +54,8 @@ nav .links a:hover{color:var(--chalk)}
 .hero{border:0;padding:56px 0 64px;min-height:calc(100dvh - 60px);display:flex;align-items:center}
 .hero .grid{display:grid;grid-template-columns:1fr;gap:48px;align-items:center}
 @media(min-width:1024px){.hero .grid{grid-template-columns:7fr 5fr}}
-.hero h1{margin:0;color:var(--chalk);font-size:clamp(2.2rem,6.4vw,5.1rem);line-height:1.02}
+.hero h1{margin:0;color:var(--chalk);font-size:clamp(2rem,4.6vw,3.9rem);line-height:1.08}
+.hero h1 .dim{color:var(--grey)}
 .hero h1 .hot{color:var(--hot)}
 .hero .sub{margin-top:26px;font-size:1.12rem;max-width:44ch}
 .ctas{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
@@ -321,8 +321,8 @@ const N = R.length;
 
 /* hero */
 const V = count(R,r=>r.verdict);
-$('#h1').innerHTML = `${N} apps.<br>${V.build_now||0} build now.<br><span class="hot">${V.blocked||0} blocked.</span>`;
-$('#hsub').textContent = `An agent researched auth, access gates, API surface and MCP for each app. Then we measured how often it was right.`;
+$('#h1').innerHTML = `All ${N} apps researched.<br>${V.build_now||0} ready to build today.<br><span class="dim">${V.build_with_friction||0} need a plan or approval.</span><br><span class="hot">${V.blocked||0} need a partner deal first.</span>`;
+$('#hsub').textContent = `An agent checked auth, access, API and MCP for each app. Every app is covered; the verdict says how hard the toolkit is to ship.`;
 const cells=$('#cells');
 R.forEach((r,i)=>{const b=document.createElement('button');b.className='cell';b.dataset.v=r.verdict;b.style.setProperty('--i',i);
   b.setAttribute('aria-label',`${r.app}: ${L(r.verdict)}`);b.innerHTML='<span></span>';
