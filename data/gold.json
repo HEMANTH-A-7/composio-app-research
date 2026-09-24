@@ -1,0 +1,412 @@
+{
+ "2": {
+  "app": "HubSpot",
+  "primary_auth": "oauth2",
+  "access": "self_serve_free",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "https://developers.hubspot.com/docs/api/oauth-quickstart-guide ; free developer account; HubSpot remote MCP server (developers.hubspot.com/mcp)"
+ },
+ "3": {
+  "app": "Pipedrive",
+  "primary_auth": "oauth2",
+  "access": [
+   "self_serve_free",
+   "self_serve_trial"
+  ],
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "pipedrive.com/en/features/mcp-server (native MCP, June 2026); developers.pipedrive.com free sandbox"
+ },
+ "6": {
+  "app": "Podio",
+  "primary_auth": "oauth2",
+  "access": "self_serve_free",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "developers.podio.com/authentication ; podio.com/settings/api ; progress.com/podio/documentation/using-podio/podio-mcp-server (mcp.podio.com, beta)"
+ },
+ "19": {
+  "app": "Gorgias",
+  "primary_auth": "oauth2",
+  "access": [
+   "self_serve_trial",
+   "approval_required",
+   "paid_plan_required"
+  ],
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_with_friction",
+  "blocker": [
+   "paid_plan",
+   "partner_approval",
+   "app_review"
+  ],
+  "src": "developers.gorgias.com/reference/authentication (OAuth2 mandatory for public apps, Developer Portal partnership); updates.gorgias.com MCP open beta May 2026"
+ },
+ "20": {
+  "app": "Gladly",
+  "primary_auth": [
+   "basic",
+   "api_key",
+   "bearer_token"
+  ],
+  "access": "partner_or_sales_gated",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "community",
+  "verdict": "blocked",
+  "blocker": [
+   "enterprise_only",
+   "partner_approval"
+  ],
+  "src": "help.gladly.com/implementation/docs/get-your-api-tokens (tokens created by admin inside a customer org; sales-led, no trial); only StackOne/Truto MCPs"
+ },
+ "22": {
+  "app": "Twilio",
+  "primary_auth": [
+   "basic",
+   "api_key"
+  ],
+  "access": [
+   "self_serve_free",
+   "self_serve_trial"
+  ],
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "twilio.com/docs/iam/api-keys ; github.com/twilio-labs/mcp"
+ },
+ "24": {
+  "app": "Lark (Larksuite)",
+  "primary_auth": "oauth2",
+  "access": "self_serve_free",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "open.larksuite.com/document (tenant/user access tokens); github.com/larksuite/lark-openapi-mcp"
+ },
+ "33": {
+  "app": "LinkedIn Ads",
+  "primary_auth": "oauth2",
+  "access": "approval_required",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": [
+   "community",
+   "none_found"
+  ],
+  "verdict": [
+   "build_with_friction",
+   "blocked"
+  ],
+  "blocker": [
+   "app_review",
+   "partner_approval"
+  ],
+  "src": "learn.microsoft.com/linkedin/marketing/increasing-access (Advertising API access form, vetting); no official MCP as of Sep 2026"
+ },
+ "39": {
+  "app": "Threads (Meta)",
+  "primary_auth": "oauth2",
+  "access": "approval_required",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "community",
+  "verdict": "build_with_friction",
+  "blocker": "app_review",
+  "src": "developers.facebook.com/docs/threads (App Review needed to act for non-tester users); community MCPs only"
+ },
+ "40": {
+  "app": "SendGrid",
+  "primary_auth": [
+   "api_key",
+   "bearer_token"
+  ],
+  "access": [
+   "self_serve_trial",
+   "paid_plan_required"
+  ],
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "community",
+  "verdict": [
+   "build_now",
+   "build_with_friction"
+  ],
+  "blocker": [
+   "none",
+   "paid_plan"
+  ],
+  "src": "support.sendgrid.com Trial Account Plan (free plan retired May 2025 -> 60-day trial); no official SendGrid MCP"
+ },
+ "47": {
+  "app": "Ecwid",
+  "primary_auth": "oauth2",
+  "access": "paid_plan_required",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": [
+   "community",
+   "none_found"
+  ],
+  "verdict": "build_with_friction",
+  "blocker": "paid_plan",
+  "src": "api-docs.ecwid.com (API on Venture/Business/Unlimited plans only)"
+ },
+ "49": {
+  "app": "Amazon Selling Partner",
+  "primary_auth": "oauth2",
+  "access": "approval_required",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": [
+   "build_with_friction",
+   "blocked"
+  ],
+  "blocker": [
+   "app_review",
+   "partner_approval"
+  ],
+  "src": "developer-docs.amazon.com/sp-api (developer registration + role approval; 2026 fees cancelled May 2026); official @amazon-sp-api-release/sp-api-dev-mcp"
+ },
+ "51": {
+  "app": "DataForSEO",
+  "primary_auth": "basic",
+  "access": [
+   "self_serve_trial",
+   "self_serve_free"
+  ],
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": [
+   "build_now",
+   "build_with_friction"
+  ],
+  "blocker": [
+   "none",
+   "paid_plan"
+  ],
+  "src": "docs.dataforseo.com/v3/auth (Basic login:password); free trial credit; github.com/dataforseo/mcp-server-typescript"
+ },
+ "58": {
+  "app": "Sherlock",
+  "primary_auth": "none",
+  "access": "self_serve_free",
+  "api_style": [
+   "sdk_or_cli_only"
+  ],
+  "mcp": "community",
+  "verdict": [
+   "build_now",
+   "build_with_friction"
+  ],
+  "blocker": [
+   "none",
+   "self_host_or_local_only",
+   "tos_or_scraping_risk"
+  ],
+  "src": "github.com/sherlock-project/sherlock (local Python CLI, no API, no auth); community MCPs e.g. Burnsedia/sherlock-mcp"
+ },
+ "60": {
+  "app": "Clay",
+  "primary_auth": [
+   "api_key",
+   "oauth2"
+  ],
+  "access": "self_serve_free",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "university.clay.com/docs/clay-api-cli ('available across all Clay plans, including free and trial'; GA Sep 2026); official MCP api.clay.com/v3/mcp"
+ },
+ "61": {
+  "app": "GitHub",
+  "primary_auth": "oauth2",
+  "access": "self_serve_free",
+  "api_style": [
+   "rest",
+   "graphql"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "docs.github.com/rest/authentication ; github.com/github/github-mcp-server"
+ },
+ "64": {
+  "app": "Cloudflare",
+  "primary_auth": [
+   "bearer_token",
+   "oauth2"
+  ],
+  "access": "self_serve_free",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "developers.cloudflare.com/fundamentals/api/get-started/create-token ; github.com/cloudflare/mcp-server-cloudflare"
+ },
+ "65": {
+  "app": "Supabase",
+  "primary_auth": [
+   "oauth2",
+   "bearer_token"
+  ],
+  "access": "self_serve_free",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "supabase.com/docs/reference/api (Management API: PAT or OAuth apps); supabase.com/docs/guides/getting-started/mcp"
+ },
+ "72": {
+  "app": "Airtable",
+  "primary_auth": "oauth2",
+  "access": "self_serve_free",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "airtable.com/developers/web/api/oauth-reference ; support.airtable.com/docs/using-the-airtable-mcp-server"
+ },
+ "78": {
+  "app": "Coda",
+  "primary_auth": "bearer_token",
+  "access": "self_serve_free",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "coda.io/developers/apis/v1 (Bearer API token); official MCP coda.io/apis/mcp public beta Apr 2026"
+ },
+ "80": {
+  "app": "Harvest",
+  "primary_auth": "oauth2",
+  "access": [
+   "self_serve_free",
+   "self_serve_trial"
+  ],
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "help.getharvest.com/api-v2/authentication-api (PAT or OAuth2); support.getharvest.com Harvest MCP (api.harvestapp.com/mcp)"
+ },
+ "82": {
+  "app": "Plaid",
+  "primary_auth": "api_key",
+  "access": [
+   "self_serve_free",
+   "approval_required"
+  ],
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": [
+   "build_now",
+   "build_with_friction"
+  ],
+  "blocker": [
+   "none",
+   "app_review"
+  ],
+  "src": "plaid.com/docs/api (client_id + secret; free Sandbox; production needs approval); plaid.com/docs/resources/mcp"
+ },
+ "85": {
+  "app": "iPayX",
+  "primary_auth": [
+   "bearer_token",
+   "api_key"
+  ],
+  "access": "self_serve_free",
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": "build_now",
+  "blocker": "none",
+  "src": "ipayx.ai/docs/mcp-server (Bearer ipx_test_/ipx_live_ keys from dashboard; official MCP)"
+ },
+ "92": {
+  "app": "Otter AI",
+  "primary_auth": [
+   "bearer_token",
+   "oauth2"
+  ],
+  "access": [
+   "partner_or_sales_gated",
+   "paid_plan_required"
+  ],
+  "api_style": [
+   "rest"
+  ],
+  "mcp": "official",
+  "verdict": [
+   "build_with_friction",
+   "blocked"
+  ],
+  "blocker": [
+   "enterprise_only",
+   "paid_plan"
+  ],
+  "src": "help.otter.ai Otter.ai Public API ('available for all Enterprise workspaces'); help.otter.ai Otter MCP Server (all plans, OAuth)"
+ },
+ "98": {
+  "app": "Mermaid CLI",
+  "primary_auth": "none",
+  "access": "self_serve_free",
+  "api_style": [
+   "sdk_or_cli_only"
+  ],
+  "mcp": "community",
+  "verdict": "build_now",
+  "blocker": [
+   "none",
+   "self_host_or_local_only"
+  ],
+  "src": "github.com/mermaid-js/mermaid-cli (local npm CLI); community MCP wrappers"
+ }
+}

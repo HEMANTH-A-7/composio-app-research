@@ -1,0 +1,203 @@
+{
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "app",
+  "one_liner",
+  "auth_methods",
+  "primary_auth",
+  "access",
+  "access_detail",
+  "api_style",
+  "api_breadth",
+  "api_breadth_note",
+  "mcp",
+  "mcp_url",
+  "webhooks",
+  "sandbox",
+  "verdict",
+  "blocker",
+  "blocker_detail",
+  "evidence",
+  "confidence",
+  "changes"
+ ],
+ "properties": {
+  "app": {
+   "type": "string"
+  },
+  "one_liner": {
+   "type": "string",
+   "description": "What the product does, max 15 words"
+  },
+  "auth_methods": {
+   "type": "array",
+   "items": {
+    "enum": [
+     "oauth2",
+     "api_key",
+     "bearer_token",
+     "basic",
+     "jwt_or_service_account",
+     "hmac_signature",
+     "none",
+     "other"
+    ]
+   }
+  },
+  "primary_auth": {
+   "enum": [
+    "oauth2",
+    "api_key",
+    "bearer_token",
+    "basic",
+    "jwt_or_service_account",
+    "hmac_signature",
+    "none",
+    "other"
+   ],
+   "description": "The method a multi-user agent toolkit would use"
+  },
+  "access": {
+   "enum": [
+    "self_serve_free",
+    "self_serve_trial",
+    "paid_plan_required",
+    "approval_required",
+    "partner_or_sales_gated",
+    "no_public_api"
+   ]
+  },
+  "access_detail": {
+   "type": "string"
+  },
+  "api_style": {
+   "type": "array",
+   "items": {
+    "enum": [
+     "rest",
+     "graphql",
+     "soap",
+     "websocket",
+     "sdk_or_cli_only",
+     "none"
+    ]
+   }
+  },
+  "api_breadth": {
+   "enum": [
+    "broad",
+    "moderate",
+    "narrow",
+    "none"
+   ],
+   "description": "broad = most product objects writable (>~40 endpoints); moderate = core objects; narrow = a handful of endpoints"
+  },
+  "api_breadth_note": {
+   "type": "string"
+  },
+  "mcp": {
+   "enum": [
+    "official",
+    "community",
+    "none_found"
+   ]
+  },
+  "mcp_url": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "webhooks": {
+   "type": [
+    "boolean",
+    "null"
+   ]
+  },
+  "sandbox": {
+   "enum": [
+    "free_dev_account_or_sandbox",
+    "trial_only",
+    "none_or_unknown"
+   ]
+  },
+  "verdict": {
+   "enum": [
+    "build_now",
+    "build_with_friction",
+    "blocked"
+   ]
+  },
+  "blocker": {
+   "enum": [
+    "none",
+    "paid_plan",
+    "partner_approval",
+    "app_review",
+    "no_public_api",
+    "self_host_or_local_only",
+    "enterprise_only",
+    "tos_or_scraping_risk",
+    "unclear_docs"
+   ]
+  },
+  "blocker_detail": {
+   "type": "string"
+  },
+  "evidence": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "field",
+     "url",
+     "quote"
+    ],
+    "properties": {
+     "field": {
+      "type": "string"
+     },
+     "url": {
+      "type": "string"
+     },
+     "quote": {
+      "type": "string",
+      "description": "Short verbatim sentence copied from the page"
+     }
+    }
+   }
+  },
+  "confidence": {
+   "type": "number"
+  },
+  "changes": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "field",
+     "from",
+     "to",
+     "reason"
+    ],
+    "properties": {
+     "field": {
+      "type": "string"
+     },
+     "from": {
+      "type": "string"
+     },
+     "to": {
+      "type": "string"
+     },
+     "reason": {
+      "type": "string"
+     }
+    }
+   }
+  }
+ }
+}

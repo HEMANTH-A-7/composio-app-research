@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Toolkit Triage: 100 Apps</title>
+<meta name="description" content="An agent researched 100 apps for Composio toolkit buildability: auth, access gates, API surface, MCP. Findings, patterns, and a measured verification loop.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="alternate" type="application/json" href="data.json" title="Machine-readable findings">
+<style>
+@font-face{font-family:"AX";src:url(ATTENTIONX-Regular.woff2) format("woff2");font-display:block}
+:root{
+  color-scheme:dark;
+  --void:#0b0b0c;--surface:#121214;--surface-2:#18181b;--line:#242427;--line-soft:#1a1a1d;--line-strong:#5f6166;
+  --grey:#8e9095;--grey-dim:#7b7d82;--chalk:#f2f2f0;--hot:#e5484d;--hot-soft:rgba(229,72,77,.14);
+  --t1:#f2f2f0;--t2:#a9abb0;--t3:#5d5f64;--t4:#2e2f33;--dot:#2a2a2e;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  color-scheme:light;--void:#f4f4f2;--surface:#eaeae7;--surface-2:#e2e2df;--line:#cfcfca;--line-soft:#dfdfda;--line-strong:#83858a;
+  --grey:#55565b;--grey-dim:#67696e;--chalk:#111113;--hot:#c8262c;--hot-soft:rgba(200,38,44,.1);
+  --t1:#111113;--t2:#55565b;--t3:#9d9ea2;--t4:#d3d3cf;--dot:#cfcfca}}
+:root[data-theme="light"]{color-scheme:light;--void:#f4f4f2;--surface:#eaeae7;--surface-2:#e2e2df;--line:#cfcfca;--line-soft:#dfdfda;--line-strong:#83858a;
+  --grey:#55565b;--grey-dim:#67696e;--chalk:#111113;--hot:#c8262c;--hot-soft:rgba(200,38,44,.1);--t1:#111113;--t2:#55565b;--t3:#9d9ea2;--t4:#d3d3cf;--dot:#cfcfca}
+:root[data-theme="dark"]{color-scheme:dark}
+*{box-sizing:border-box;border-radius:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--void);color:var(--grey);font:15px/1.6 Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--chalk);text-underline-offset:3px;text-decoration-color:var(--line-strong)}
+a:hover{text-decoration-color:var(--chalk)}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.ax{font-family:AX,Archivo,sans-serif;text-transform:uppercase;letter-spacing:.02em;font-weight:400}
+.wrap{max-width:1320px;margin:0 auto;padding:0 20px}
+@media(min-width:768px){.wrap{padding:0 40px}}
+h2{color:var(--chalk);font-weight:600;font-size:clamp(1.6rem,3.2vw,2.4rem);line-height:1.1;letter-spacing:-.02em;margin:0 0 14px;max-width:26ch}
+h3{color:var(--chalk);font-weight:600;font-size:1.05rem;margin:0 0 6px;letter-spacing:-.005em}
+p{margin:0 0 12px;max-width:68ch}
+section{padding:88px 0;border-top:1px solid var(--line-soft)}
+.lede{font-size:1.05rem;color:var(--grey);max-width:60ch}
+
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--void) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-soft)}
+nav .wrap{display:flex;align-items:center;gap:28px;height:60px}
+nav .brand{color:var(--chalk);font-weight:600;text-decoration:none;white-space:nowrap;display:flex;gap:10px;align-items:center}
+nav .brand i{width:9px;height:9px;background:var(--hot);display:inline-block}
+nav .links{display:flex;gap:22px;margin-left:auto;font-size:13px}
+nav .links a{color:var(--grey);text-decoration:none}
+nav .links a:hover{color:var(--chalk)}
+@media(max-width:860px){nav .links a:not(.keep){display:none}}
+.tbtn{background:none;border:1px solid var(--line);color:var(--grey);font:12px "IBM Plex Mono";padding:6px 10px;cursor:pointer}
+.tbtn:hover{border-color:var(--line-strong);color:var(--chalk)}
+
+/* hero */
+.hero{border:0;padding:56px 0 64px;min-height:calc(100dvh - 60px);display:flex;align-items:center}
+.hero .grid{display:grid;grid-template-columns:1fr;gap:48px;align-items:center}
+@media(min-width:1024px){.hero .grid{grid-template-columns:7fr 5fr}}
+.hero h1{margin:0;color:var(--chalk);font-size:clamp(2.2rem,6.4vw,5.1rem);line-height:1.02}
+.hero h1 .hot{color:var(--hot)}
+.hero .sub{margin-top:26px;font-size:1.12rem;max-width:44ch}
+.ctas{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;font-weight:600;font-size:14px;text-decoration:none;border:1px solid var(--chalk);white-space:nowrap;transition:transform .15s}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--chalk);color:var(--void)}
+.btn.ghost{color:var(--chalk);border-color:var(--line-strong)}
+.btn.ghost:hover{border-color:var(--chalk)}
+.field{position:relative}
+.field .cells{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
+.cell{aspect-ratio:1;display:grid;place-items:center;cursor:pointer;position:relative;background:none;border:0;padding:0}
+.cell span{width:62%;height:62%;border-radius:50%;background:var(--t3);transition:transform .25s cubic-bezier(.16,1,.3,1)}
+.cell[data-v="build_now"] span{background:var(--t1)}
+.cell[data-v="build_with_friction"] span{background:transparent;box-shadow:inset 0 0 0 2px var(--t2)}
+.cell[data-v="blocked"] span{background:var(--hot)}
+.cell:hover span,.cell:focus-visible span{transform:scale(1.35)}
+.cell.dim span{opacity:.14}
+.field .readout{margin-top:18px;min-height:44px;font-size:13px;display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:12px}
+.field .readout b{color:var(--chalk);font-weight:500}
+.key{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;margin-top:10px}
+.key button{background:none;border:0;color:var(--grey);font:inherit;cursor:pointer;display:flex;align-items:center;gap:7px;padding:4px 0}
+.key button[aria-pressed="true"]{color:var(--chalk)}
+.sw{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--t1)}
+.sw.f{background:transparent;box-shadow:inset 0 0 0 2px var(--t2)}.sw.b{background:var(--hot)}
+@keyframes ignite{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:no-preference){.cell span{animation:ignite .5s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i)*9ms)}}
+
+/* patterns */
+.findings{display:grid;grid-template-columns:1fr;gap:0;margin-top:40px;border-top:1px solid var(--line)}
+@media(min-width:900px){.findings{grid-template-columns:1fr 1fr}}
+.finding{padding:30px 0 34px;border-bottom:1px solid var(--line)}
+@media(min-width:900px){.finding:nth-child(odd){padding-right:40px;border-right:1px solid var(--line)}.finding:nth-child(even){padding-left:40px}}
+.finding .num{font-size:clamp(2.6rem,5vw,3.8rem);color:var(--chalk);line-height:1;margin-bottom:14px}
+.finding .num small{font-size:.45em;color:var(--grey)}
+.finding.wide{grid-column:1/-1;padding-right:0!important;border-right:0!important}
+.bar{display:flex;height:34px;margin:16px 0 8px;gap:2px}
+.bar div{display:flex;align-items:center;padding:0 8px;font:11px "IBM Plex Mono";color:var(--void);overflow:hidden;white-space:nowrap;min-width:2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font:12px "IBM Plex Mono"}
+.legend i{display:inline-block;width:9px;height:9px;margin-right:6px;vertical-align:-1px}
+
+/* heatmap */
+.heat{width:100%;border-collapse:collapse;margin-top:18px;font-size:12.5px}
+.heat th{font:500 11px "IBM Plex Mono";color:var(--grey-dim);text-align:left;padding:6px 8px;vertical-align:bottom}
+.heat td{padding:0;border:1px solid var(--void);height:32px;text-align:center;font:12px "IBM Plex Mono"}
+.heat td.lab{text-align:left;padding:0 10px 0 0;color:var(--chalk);font:13px Archivo;white-space:nowrap}
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.split>*,.finding,.findings,.lists>*,.hero .grid>*{min-width:0}
+.chip{overflow-wrap:anywhere}
+.lists{display:grid;grid-template-columns:1fr;gap:28px;margin-top:18px}
+@media(min-width:760px){.lists{grid-template-columns:1fr 1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font:12px "IBM Plex Mono";border:1px solid var(--line);padding:4px 8px;color:var(--chalk);background:var(--surface)}
+.chip.hot{border-color:var(--hot);color:var(--hot);background:var(--hot-soft)}
+
+/* matrix */
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:28px 0 14px}
+.tools input{background:var(--surface);border:1px solid var(--line-strong);color:var(--chalk);font:14px Archivo;padding:10px 12px;min-width:240px;flex:1;max-width:340px}
+.tools input::placeholder{color:var(--grey-dim)}
+.tools input:focus,.tools select:focus{outline:2px solid var(--chalk);outline-offset:1px}
+.tools select{background:var(--surface);border:1px solid var(--line-strong);color:var(--chalk);font:13px Archivo;padding:10px}
+.tools .count{font:12px "IBM Plex Mono";margin-left:auto}
+table.mx{width:100%;border-collapse:collapse;font-size:13px;min-width:1100px}
+.mx th{background:var(--void);font:500 11px "IBM Plex Mono";color:var(--grey-dim);text-align:left;padding:10px 8px;border-bottom:1px solid var(--line-strong);cursor:pointer;white-space:nowrap;z-index:2}
+.mx th:hover{color:var(--chalk)}
+.mx td{padding:10px 8px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+.mx tr.row{cursor:pointer}
+.mx tr.row:hover td{background:var(--surface)}
+.mx td.app{color:var(--chalk);font-weight:600;white-space:nowrap}
+.mx td.app small{display:block;font-weight:400;color:var(--grey-dim);font-size:11.5px}
+.tag{font:11.5px "IBM Plex Mono";color:var(--chalk);white-space:nowrap}
+.tag.dim{color:var(--grey-dim)}
+.v{font:500 11.5px "IBM Plex Mono";padding:3px 7px;white-space:nowrap;display:inline-block}
+.v.build_now{background:var(--chalk);color:var(--void)}
+.v.build_with_friction{border:1px solid var(--line-strong);color:var(--chalk)}
+.v.blocked{background:var(--hot);color:#fff}
+.mx tr.detail td{background:var(--surface);padding:18px 16px 22px}
+.detail-grid{display:grid;grid-template-columns:1fr;gap:18px}
+@media(min-width:900px){.detail-grid{grid-template-columns:1.1fr 1fr}}
+.ev{font-size:12.5px;margin:0 0 10px;padding-left:12px;border-left:2px solid var(--line-strong)}
+.ev q{color:var(--chalk)}
+.ev a{font:11.5px "IBM Plex Mono";word-break:break-all}
+.chg{font:12px "IBM Plex Mono";margin:0 0 6px}
+.chg s{color:var(--hot)}
+.kv{font-size:13px;margin:0 0 8px}.kv b{color:var(--chalk);font-weight:500}
+
+/* agent */
+.pipe{display:grid;grid-template-columns:1fr;gap:0;margin-top:36px;border:1px solid var(--line)}
+@media(min-width:1000px){.pipe{grid-template-columns:repeat(5,1fr)}}
+.stage{padding:22px 20px 24px;border-bottom:1px solid var(--line);position:relative}
+@media(min-width:1000px){.stage{border-bottom:0;border-right:1px solid var(--line)}.stage:last-child{border-right:0}}
+.stage .k{font:11px "IBM Plex Mono";color:var(--grey-dim);margin-bottom:10px;display:block}
+.stage p{font-size:13.5px;margin:0 0 10px}
+.stage .who{font:11.5px "IBM Plex Mono";color:var(--chalk);border-top:1px dashed var(--line);padding-top:10px;margin-top:12px}
+.stage.human{background:var(--hot-soft)}
+.stage.human .who{color:var(--hot)}
+.split{display:grid;grid-template-columns:1fr;gap:40px;margin-top:48px}
+@media(min-width:960px){.split{grid-template-columns:1fr 1fr}}
+pre{background:var(--surface);border:1px solid var(--line);padding:18px;overflow-x:auto;font:12.5px/1.65 "IBM Plex Mono";color:var(--chalk);margin:0}
+pre .c{color:var(--grey-dim)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--line)}
+.stat{padding:18px 0;border-bottom:1px solid var(--line)}
+.stat:nth-child(odd){padding-right:16px;border-right:1px solid var(--line)}.stat:nth-child(even){padding-left:16px}
+.stat .n{font-size:2rem;color:var(--chalk);line-height:1.1}
+.stat .l{font-size:12.5px}
+
+/* verification */
+.ladder{display:grid;grid-template-columns:1fr;gap:0;margin-top:40px;border-top:1px solid var(--line)}
+@media(min-width:900px){.ladder{grid-template-columns:repeat(4,1fr)}}
+.rung{padding:24px 20px 26px 0;border-bottom:1px solid var(--line)}
+@media(min-width:900px){.rung{border-bottom:0;border-right:1px solid var(--line);padding-left:20px}.rung:first-child{padding-left:0}.rung:last-child{border-right:0}}
+.rung .pct{font-size:clamp(2.6rem,4.6vw,3.6rem);color:var(--chalk);line-height:1}
+.rung .pct.low{color:var(--grey)}
+.rung h3{margin-top:14px}
+.rung p{font-size:13px}
+.rung .delta{font:12px "IBM Plex Mono";color:var(--chalk)}
+.pf{width:100%;border-collapse:collapse;font:12.5px "IBM Plex Mono";margin-top:18px;min-width:560px}
+.pf th,.pf td{padding:9px 8px;border-bottom:1px solid var(--line-soft);text-align:right}
+.pf th:first-child,.pf td:first-child{text-align:left;color:var(--chalk);font-family:Archivo}
+.pf th{color:var(--grey-dim);font-weight:500}
+.pf td.best{color:var(--chalk)}
+.miss{display:grid;grid-template-columns:1fr;gap:0;margin-top:14px;border-top:1px solid var(--line)}
+@media(min-width:800px){.miss{grid-template-columns:1fr 1fr 1fr}}
+.miss div{padding:12px 16px 12px 0;border-bottom:1px solid var(--line-soft);font-size:13px}
+.miss b{color:var(--chalk);font-weight:600}
+.miss .g{font:12px "IBM Plex Mono"}
+.miss .g s{color:var(--hot)}
+.honest{display:grid;grid-template-columns:1fr;gap:0 48px;margin-top:28px}
+@media(min-width:900px){.honest{grid-template-columns:1fr 1fr}}
+.honest div{padding:16px 0;border-top:1px solid var(--line)}
+footer{padding:48px 0 64px;border-top:1px solid var(--line);font-size:13px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between}
+.reveal{opacity:1}
+@media (prefers-reduced-motion:no-preference){.reveal{opacity:0;transform:translateY(14px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}.reveal.in{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="#top"><i></i>Toolkit Triage</a>
+  <div class="links">
+    <a href="#patterns">Patterns</a><a href="#matrix" class="keep">Matrix</a><a href="#agent">Agent</a><a href="#verify" class="keep">Verification</a><a href="data.json">data.json</a>
+  </div>
+  <button class="tbtn" id="theme" aria-label="Toggle colour theme">theme</button>
+</div></nav>
+
+<main id="top">
+<section class="hero"><div class="wrap grid">
+  <div>
+    <h1 class="ax" id="h1"></h1>
+    <p class="sub" id="hsub"></p>
+    <div class="ctas">
+      <a class="btn primary" href="#patterns">Read the patterns</a>
+      <a class="btn ghost" href="__REPO__">Run the agent</a>
+    </div>
+  </div>
+  <div class="field" aria-label="Each dot is one app, coloured by buildability verdict">
+    <div class="cells" id="cells"></div>
+    <div class="key" id="key"></div>
+    <div class="readout mono" id="readout"><span>Hover a dot. Each one is an app.</span><span></span></div>
+  </div>
+</div></section>
+
+<section id="patterns"><div class="wrap">
+  <h2 class="reveal">What 100 apps say about where toolkits come from next</h2>
+  <p class="lede reveal">Every number below is computed live from the published dataset (scout output, lint, verifier where it ran, and logged human corrections).</p>
+  <div class="findings" id="findings"></div>
+</div></section>
+
+<section id="matrix"><div class="wrap">
+  <h2>The matrix</h2>
+  <p class="lede">All 100 apps. Click a row for the one-liner, access detail, verbatim evidence quotes, and what the verifier or a human changed.</p>
+  <div class="tools">
+    <input id="q" type="search" placeholder="Filter by app, auth, blocker..." aria-label="Filter apps">
+    <select id="fcat" aria-label="Category"><option value="">All categories</option></select>
+    <select id="fver" aria-label="Verdict"><option value="">All verdicts</option><option value="build_now">Build now</option><option value="build_with_friction">With friction</option><option value="blocked">Blocked</option></select>
+    <span class="count mono" id="count"></span>
+  </div>
+  <div class="scroll-x"><table class="mx" id="mx"><thead><tr>
+    <th data-k="id">#</th><th data-k="app">App</th><th data-k="primary_auth">Auth</th><th data-k="access">Access</th><th data-k="api">API</th><th data-k="mcp">MCP</th><th data-k="composio_slug">Composio</th><th data-k="verdict">Verdict</th><th data-k="blocker">Main blocker</th><th data-k="confidence">Conf.</th><th data-k="verified">Checked</th>
+  </tr></thead><tbody></tbody></table></div>
+</div></section>
+
+<section id="agent"><div class="wrap">
+  <h2>The agent: five stages, one human gate</h2>
+  <p class="lede">A Python orchestrator fans out headless Claude Code workers. Each worker is sandboxed to WebSearch and WebFetch and must return JSON against a strict schema with enums, so answers can be scored field by field.</p>
+  <div class="pipe" id="pipe"></div>
+  <div class="split">
+    <div>
+      <h3>Trigger it yourself</h3>
+      <p>Needs Python 3.10+ and a logged-in <span class="mono">claude</span> CLI. No API keys, no pip installs. Every stage caches per app, so reruns only redo what failed, and a hard budget cap stops spend.</p>
+<pre><span class="c"># research one app end to end (41 = Shopify)</span>
+git clone __REPO__
+cd composio-app-research
+python agent/run.py scout  --apps 41
+python agent/run.py ground --apps 41
+python agent/run.py verify --apps 41
+
+<span class="c"># all 100, resumable, BUDGET_USD caps spend</span>
+BUDGET_USD=48 ./agent/run_all.sh
+python agent/run.py score && python agent/run.py export</pre>
+    </div>
+    <div>
+      <h3>What the run cost</h3>
+      <div class="stats" id="runstats"></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="verify"><div class="wrap">
+  <h2>How we know it is right</h2>
+  <p class="lede" id="vlede"></p>
+  <div class="ladder" id="ladder"></div>
+  <div class="split">
+    <div>
+      <h3>Accuracy by field, each pass</h3>
+      <div class="scroll-x"><table class="pf" id="pf"></table></div>
+      <p style="margin-top:14px;font-size:13px">A field counts as correct when it matches the gold answer. Where the docs support two readings (Twilio's trial credit reads as free or as trial), the gold record accepts both. <a href="data.json">data.json</a> lists exactly which values were accepted.</p>
+    </div>
+    <div>
+      <h3>Grounding: do the cited pages say what the agent claims?</h3>
+      <div class="stats" id="gstats"></div>
+      <p style="margin-top:14px;font-size:13px">Checked with no LLM involved: fetch every evidence URL the scout cited, strip the HTML, and look for the quoted sentence. A dead link or a quote missing from the page means the claim was not read from that page, so the row is routed to review.</p>
+    </div>
+  </div>
+  <h3 style="margin-top:56px">Every miss on the audited sample, and what happened to it</h3>
+  <p style="font-size:13px">Human corrections are applied to the published data but not counted in the accuracy above, since the same person wrote the answer key.</p>
+  <div class="miss" id="finalmiss"></div>
+  <h3 style="margin-top:44px">Human review queue</h3>
+  <p style="font-size:13px" id="qlede"></p>
+  <div class="chips" id="queue"></div>
+  <h2 style="margin-top:72px;font-size:1.6rem">Where it fell short</h2>
+  <div class="honest" id="honest"></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <span>Built for the Composio AI Product Ops take-home. Research snapshot: __DATE__.</span>
+  <span><a href="data.json">data.json</a> &nbsp; <a href="findings.csv">findings.csv</a> &nbsp; <a href="llms.txt">llms.txt</a> &nbsp; <a href="__REPO__">source</a></span>
+</div></footer>
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+const R = D.rows.sort((a,b)=>a.id-b.id);
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const count = (arr,f)=>arr.reduce((m,x)=>{const k=f(x);m[k]=(m[k]||0)+1;return m},{});
+const pct = (a,b)=>Math.round(100*a/b);
+const LBL = {
+  oauth2:'OAuth2',api_key:'API key',bearer_token:'Token',basic:'Basic',jwt_or_service_account:'JWT / service acct',hmac_signature:'HMAC',none:'None',other:'Other',
+  self_serve_free:'Free, self-serve',self_serve_trial:'Trial only',paid_plan_required:'Paid plan',approval_required:'Needs approval',partner_or_sales_gated:'Partner / sales',no_public_api:'No public API',
+  build_now:'Build now',build_with_friction:'With friction',blocked:'Blocked',
+  official:'Official',community:'Community',none_found:'None found',
+  paid_plan:'Paid plan',partner_approval:'Partner approval',app_review:'App review',self_host_or_local_only:'Local / self-host',enterprise_only:'Enterprise only',tos_or_scraping_risk:'ToS / scraping',unclear_docs:'Unclear docs'
+};
+const L = k=>LBL[k]||k;
+const N = R.length;
+
+/* theme */
+(()=>{const b=$('#theme');let t=null;try{t=localStorage.getItem('tt')}catch(e){}
+ if(t)document.documentElement.dataset.theme=t;
+ b.onclick=()=>{const cur=document.documentElement.dataset.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+  const n=cur==='light'?'dark':'light';document.documentElement.dataset.theme=n;try{localStorage.setItem('tt',n)}catch(e){}}})();
+
+/* hero */
+const V = count(R,r=>r.verdict);
+$('#h1').innerHTML = `${N} apps.<br>${V.build_now||0} build now.<br><span class="hot">${V.blocked||0} blocked.</span>`;
+$('#hsub').textContent = `An agent researched auth, access gates, API surface and MCP for each app. Then we measured how often it was right.`;
+const cells=$('#cells');
+R.forEach((r,i)=>{const b=document.createElement('button');b.className='cell';b.dataset.v=r.verdict;b.style.setProperty('--i',i);
+  b.setAttribute('aria-label',`${r.app}: ${L(r.verdict)}`);b.innerHTML='<span></span>';
+  const show=()=>{$('#readout').innerHTML=`<span><b>${esc(r.app)}</b> ${esc(r.category)}</span><span>${L(r.verdict)} / ${L(r.primary_auth)} / ${L(r.access)}</span>`};
+  b.onmouseenter=show;b.onfocus=show;b.onclick=()=>openRow(r.id);cells.appendChild(b)});
+let keyOn=null;
+$('#key').innerHTML=['build_now','build_with_friction','blocked'].map(v=>`<button data-v="${v}" aria-pressed="false"><i class="sw ${v==='blocked'?'b':v==='build_with_friction'?'f':''}"></i>${L(v)} ${V[v]||0}</button>`).join('');
+$('#key').onclick=e=>{const b=e.target.closest('button');if(!b)return;keyOn=keyOn===b.dataset.v?null:b.dataset.v;
+  document.querySelectorAll('#key button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===keyOn));
+  document.querySelectorAll('.cell').forEach(c=>c.classList.toggle('dim',!!keyOn&&c.dataset.v!==keyOn))};
+
+/* patterns */
+function stacked(counts,order,colors){
+  const bar=order.filter(k=>counts[k]).map((k,i)=>`<div style="flex:${counts[k]};background:${colors[i]}" title="${L(k)}: ${counts[k]}">${counts[k]>=6?counts[k]:''}</div>`).join('');
+  const leg=order.filter(k=>counts[k]).map((k,i)=>`<span><i style="background:${colors[i]}"></i>${L(k)} ${counts[k]}</span>`).join('');
+  return `<div class="bar">${bar}</div><div class="legend">${leg}</div>`}
+const auth=count(R,r=>r.primary_auth);
+const authOrder=Object.keys(auth).sort((a,b)=>auth[b]-auth[a]);
+const acc=count(R,r=>r.access);
+const accOrder=['self_serve_free','self_serve_trial','paid_plan_required','approval_required','partner_or_sales_gated','no_public_api'];
+const mcp=count(R,r=>r.mcp);
+const blk=count(R.filter(r=>r.blocker!=='none'),r=>r.blocker);
+const blkOrder=Object.keys(blk).sort((a,b)=>blk[b]-blk[a]);
+const inComposio=R.filter(r=>r.composio_slug).length;
+const openQ=new Set(D.review_queue.filter(q=>!D.verified_ids.includes(String(q.id))&&!(D.human_overrides||{})[q.id]).map(q=>+q.id));
+const easy=R.filter(r=>r.verdict==='build_now'&&!r.composio_slug&&!openQ.has(r.id));
+const outreach=R.filter(r=>r.verdict==='blocked'||['partner_or_sales_gated','approval_required'].includes(r.access));
+const cats=[...new Set(R.map(r=>r.category))];
+const oauthPlusKey=R.filter(r=>r.auth_methods.includes('oauth2')&&r.auth_methods.some(a=>['api_key','bearer_token','basic'].includes(a))).length;
+
+function heat(){const cols=accOrder.filter(k=>acc[k]);
+  let h=`<div class="scroll-x"><table class="heat"><tr><th></th>${cols.map(c=>`<th>${L(c)}</th>`).join('')}<th>Free share</th></tr>`;
+  cats.forEach(c=>{const rs=R.filter(r=>r.category===c);const cc=count(rs,r=>r.access);
+    h+=`<tr><td class="lab">${esc(c)}</td>`+cols.map(k=>{const n=cc[k]||0;const hot=['partner_or_sales_gated','no_public_api'].includes(k);
+      const a=n/rs.length;const bg=n?(hot?`color-mix(in srgb,var(--hot) ${20+a*80}%,transparent)`:`color-mix(in srgb,var(--chalk) ${8+a*80}%,transparent)`):'transparent';
+      return `<td style="background:${bg};color:${a>.45?'var(--void)':'var(--chalk)'}">${n||''}</td>`}).join('')+`<td class="mono" style="color:var(--chalk)">${pct(cc.self_serve_free||0,rs.length)}%</td></tr>`});
+  return h+'</table></div>'}
+
+const F = [];
+F.push({num:`${pct(auth.oauth2||0,N)}<small>%</small>`,t:`OAuth2 dominates, and ${oauthPlusKey} apps offer OAuth and a static key side by side`,
+  b:`OAuth2 is the primary auth for ${auth.oauth2||0} of ${N} apps. The long tail (${(auth.api_key||0)+(auth.bearer_token||0)+(auth.basic||0)} apps) is key, token or Basic only, so every one of those needs a bring-your-own-key connection flow rather than a Composio-managed OAuth app.`,
+  x:stacked(auth,authOrder,['var(--t1)','var(--t2)','var(--t3)','var(--line-strong)','var(--hot)','var(--grey-dim)','var(--t4)'])});
+F.push({num:`${pct(acc.self_serve_free||0,N)}<small>%</small>`,t:`${acc.self_serve_free||0} of ${N} hand out working credentials for free`,
+  b:`The other ${N-(acc.self_serve_free||0)} sit behind a trial clock, a paid tier, an approval queue, or a sales call. Access, not API quality, decides what can ship this week: almost every app has a documented REST API.`,
+  x:stacked(acc,accOrder.filter(k=>acc[k]),['var(--t1)','var(--t2)','var(--t3)','var(--line-strong)','var(--hot)','color-mix(in srgb,var(--hot) 55%,var(--void))'])});
+F.push({wide:1,t:`Where the gates are: access tier by category`,b:D.copy.heat,x:heat()});
+F.push({num:`${blk[blkOrder[0]]||0}`,t:`Most common blocker: ${L(blkOrder[0]).toLowerCase()}`,
+  b:`Of the ${R.filter(r=>r.blocker!=='none').length} apps with any blocker, the ranking is ${blkOrder.slice(0,4).map(k=>`${L(k).toLowerCase()} (${blk[k]})`).join(', ')}. A missing API is rare. The friction is commercial: plans, reviews and contracts.`,
+  x:stacked(blk,blkOrder,['var(--hot)','var(--t1)','var(--t2)','var(--t3)','var(--line-strong)','var(--grey-dim)','var(--t4)','var(--grey)'])});
+F.push({num:`${mcp.official||0}`,t:`${mcp.official||0} apps already ship an official MCP server`,
+  b:`Most launched in 2025 and 2026, which is exactly what a closed-book model gets wrong: MCP was its weakest field (see verification). A vendor with an official MCP and open OAuth has already invited agent traffic, so those are the lowest-risk toolkits to build.`,
+  x:stacked(mcp,['official','community','none_found'],['var(--t1)','var(--t3)','var(--t4)'])});
+F.push({wide:1,t:`Easy wins vs. outreach`,b:`Easy wins are rated build now, have no Composio toolkit page, and are not waiting in the review queue. Outreach means a partner or sales gate, or an approval queue, where a BD conversation comes before engineering. Composio already has public toolkit pages for ${inComposio} of the ${N}.`,
+  x:`<div class="lists"><div><h3>Easy wins: build now, not on Composio yet (${easy.length})</h3><div class="chips">${easy.map(r=>`<a class="chip" href="#r${r.id}" onclick="openRow(${r.id});return false">${esc(r.app)}</a>`).join('')}</div></div>
+     <div><h3>Needs outreach first (${outreach.length})</h3><div class="chips">${outreach.map(r=>`<a class="chip hot" href="#r${r.id}" onclick="openRow(${r.id});return false">${esc(r.app)}</a>`).join('')}</div></div></div>`});
+$('#findings').innerHTML=F.map(f=>`<div class="finding reveal ${f.wide?'wide':''}">${f.num?`<div class="num ax">${f.num}</div>`:''}<h3>${f.t}</h3><p>${f.b}</p>${f.x||''}</div>`).join('');
+
+/* matrix */
+cats.forEach(c=>$('#fcat').insertAdjacentHTML('beforeend',`<option>${esc(c)}</option>`));
+const QIDS=new Set(D.review_queue.map(q=>+q.id));
+let sortK='id',sortDir=1,open=null;
+const api=r=>(r.api_style||[]).map(s=>s==='sdk_or_cli_only'?'CLI/SDK':s.toUpperCase()).join('+')+(r.api_breadth&&r.api_breadth!=='none'?` · ${r.api_breadth}`:'');
+function rowHTML(r){return `<tr class="row" id="r${r.id}" data-id="${r.id}"><td class="mono">${r.id}</td><td class="app">${esc(r.app)}<small>${esc(r.category)}</small></td>
+ <td><span class="tag">${L(r.primary_auth)}</span>${r.auth_methods.length>1?`<br><span class="tag dim">+${r.auth_methods.filter(a=>a!==r.primary_auth).map(L).join(', ')}</span>`:''}</td>
+ <td><span class="tag">${L(r.access)}</span></td>
+ <td><span class="tag">${esc(api(r))}</span></td><td><span class="tag ${r.mcp==='none_found'?'dim':''}">${L(r.mcp)}</span></td>
+ <td><span class="tag ${r.composio_slug?'':'dim'}">${r.composio_slug?'yes':'not found'}</span></td>
+ <td><span class="v ${r.verdict}">${L(r.verdict)}</span></td><td>${r.blocker==='none'?'<span class="tag dim">none</span>':`<span class="tag">${L(r.blocker)}</span>`}</td>
+ <td class="mono">${Math.round(r.confidence*100)}</td><td>${r.human?'<span class="tag">human</span>':r.verified?'<span class="tag">verifier</span>':QIDS.has(r.id)?'<span class="tag" style="color:var(--hot)">in review</span>':'<span class="tag dim">scout</span>'}</td></tr>`}
+function detailHTML(r){return `<tr class="detail"><td colspan="11"><div class="detail-grid"><div>
+ <p class="kv"><b>${esc(r.one_liner)}</b></p>
+ <p class="kv"><b>Access.</b> ${esc(r.access_detail)}</p>
+ <p class="kv"><b>API.</b> ${esc(r.api_breadth_note)}${r.webhooks?' Webhooks: yes.':''}</p>
+ <p class="kv"><b>Blocker.</b> ${esc(r.blocker_detail)}</p>
+ ${r.mcp_url?`<p class="kv"><b>MCP.</b> <a class="mono" href="${esc(r.mcp_url)}">${esc(r.mcp_url)}</a></p>`:''}
+ ${r.human?`<p class="kv" style="color:var(--hot)"><b style="color:var(--hot)">Human correction.</b> ${esc(r.human)}</p>`:''}
+ </div><div><p class="kv"><b>Evidence</b></p>${(r.evidence||[]).map(e=>`<p class="ev"><span class="mono">${esc(e.field)}</span> <q>${esc(e.quote)}</q><br><a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.url)}</a></p>`).join('')}
+ <p class="kv" style="margin-top:14px"><b>Verifier changes</b></p>${(r.verifier_changes||[]).length?r.verifier_changes.map(c=>`<p class="chg">${esc(c.field)}: <s>${esc(c.from)}</s> → ${esc(c.to)}<br><span style="color:var(--grey)">${esc(c.reason)}</span></p>`).join(''):(r.verifier_changes===null?'<p class="chg">not reached by the verifier (usage cap); scout output plus lint</p>':'<p class="chg">none, first pass held up</p>')}
+ </div></div></td></tr>`}
+function render(){const q=$('#q').value.toLowerCase(),fc=$('#fcat').value,fv=$('#fver').value;
+  let rs=R.filter(r=>(!fc||r.category===fc)&&(!fv||r.verdict===fv)&&(!q||JSON.stringify([r.app,r.category,L(r.primary_auth),L(r.access),L(r.blocker),r.one_liner,L(r.mcp)]).toLowerCase().includes(q)));
+  rs=[...rs].sort((a,b)=>{const x=sortK==='api'?api(a):a[sortK],y=sortK==='api'?api(b):b[sortK];return (x>y?1:x<y?-1:0)*sortDir});
+  $('#mx tbody').innerHTML=rs.map(r=>rowHTML(r)+(open===r.id?detailHTML(r):'')).join('');
+  $('#count').textContent=`${rs.length} of ${N}`}
+window.openRow=id=>{open=id;$('#q').value='';$('#fcat').value='';$('#fver').value='';render();requestAnimationFrame(()=>document.getElementById('r'+id).scrollIntoView({block:'center'}))};
+$('#mx tbody').onclick=e=>{const tr=e.target.closest('tr.row');if(!tr||e.target.closest('a'))return;const id=+tr.dataset.id;open=open===id?null:id;render()};
+document.querySelectorAll('#mx th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;sortDir=sortK===k?-sortDir:1;sortK=k;render()});
+['#q','#fcat','#fver'].forEach(s=>$(s).addEventListener('input',render));
+render();
+
+/* agent */
+$('#pipe').innerHTML=D.stages.map(s=>`<div class="stage ${s.human?'human':''}"><span class="k">${esc(s.kind)}</span><h3>${esc(s.name)}</h3><p>${esc(s.what)}</p><div class="who">${esc(s.who)}</div></div>`).join('');
+const M=D.run,nV0=D.verified_ids.length;
+$('#runstats').innerHTML=[[M.llm_calls,`headless agent runs (100 closed-book, 100 scout, ${nV0} verify)`],[`$${M.cost.toFixed(0)}`,'list-price model cost, under a $48 cap'],[`${M.agent_minutes} min`,'of agent time, run 5 to 10 in parallel'],[M.overrides,'rows corrected by the human audit']].map(([n,l])=>`<div class="stat"><div class="n ax">${n}</div><div class="l">${l}</div></div>`).join('');
+
+/* verification */
+const SC=D.score,G=D.gold,nG=Object.keys(G).length,nV=SC.verify.total/6;
+$('#vlede').textContent=`We hand-audited a stratified random sample of ${nG} apps (two per category plus five more, fixed seed) against primary docs, before scoring anything. Six scored fields per app gives ${SC.scout.total} checks. The same frozen answer key scores every pass.`;
+const rungs=[
+ [SC.baseline,'Closed-book',`Same model, schema and rubric, browsing off. The floor. ${nG} apps.`,null],
+ [SC.scout,'Scout',`Web search and fetch, verbatim evidence. ${nG} apps.`,SC.baseline],
+ [SC.lint,'+ Lint',`Deterministic cross-field rules, no LLM. Fixed ${D.lintFixes} contradiction${D.lintFixes===1?'':'s'}. ${nG} apps.`,SC.scout],
+ [SC.verify,'Verifier',`Adversarial second agent. Reached ${nV} of ${nG} sample apps before the usage cap; the scout scored ${Math.round(SC.scout_on_verified.accuracy*100)}% on those same ${nV}.`,SC.scout_on_verified]];
+$('#ladder').innerHTML=rungs.map(([s,n,d,prev],i)=>`<div class="rung reveal"><div class="pct ax ${i<1?'low':''}">${(s.accuracy*100).toFixed(1).replace('.0','')}%</div><h3>${n}</h3><p>${d}</p><div class="delta">${s.hits}/${s.total} fields${prev?` · ${((s.accuracy-prev.accuracy)*100>=0?'+':'')}${((s.accuracy-prev.accuracy)*100).toFixed(1)} pts vs ${i===3?'scout, same apps':'prior'}`:''}</div></div>`).join('');
+const fields=Object.keys(SC.scout.per_field);const cols=[['baseline','Closed-book'],['scout','Scout'],['lint','+ Lint'],['scout_on_verified',`Scout (${nV})`],['verify',`Verifier (${nV})`]];
+$('#pf').innerHTML=`<tr><th>Field</th>${cols.map(p=>`<th>${p[1]}</th>`).join('')}</tr>`+fields.map(f=>`<tr><td>${f.replace('_',' ')}</td>${cols.map(p=>`<td class="${p[0]==='verify'?'best':''}">${Math.round(SC[p[0]].per_field[f]*100)}%</td>`).join('')}</tr>`).join('');
+const gs=D.grounding;
+$('#gstats').innerHTML=[[`${gs.urls}`,'evidence quotes cited by the scout'],[`${pct(gs.live,gs.urls)}%`,'of cited URLs resolved (HTTP 200)'],[`${pct(gs.verbatim,gs.checkable)}%`,'of readable pages contain the quote word for word'],[`${gs.by_status.quote_not_found||0}`,'quotes not found on the page, fed to the verifier']].map(([n,l])=>`<div class="stat"><div class="n ax">${n}</div><div class="l">${l}</div></div>`).join('');
+const fmt=v=>Array.isArray(v)?v.map(L).join(' / '):L(v);
+const O=D.human_overrides||{};
+$('#finalmiss').innerHTML=SC.lint.misses.map(m=>{const fixedV=D.verified_ids.includes(m.id)&&!SC.verify.misses.some(x=>x.id===m.id&&x.field===m.field);
+  const fixedH=O[m.id]&&m.field in O[m.id].set;const st=fixedV?'fixed by verifier':fixedH?'corrected by human audit':'still wrong';
+  return `<div><b>${esc(m.app)}</b> <span class="mono">${m.field}</span><br><span class="g">said <s>${esc(fmt(m.got))}</s>, docs say ${esc(fmt(m.gold))}</span><br><span class="mono" style="font-size:11.5px;color:${st==='still wrong'?'var(--hot)':'var(--chalk)'}">${st}</span></div>`}).join('');
+$('#queue').innerHTML=D.review_queue.map(q=>{const done=D.verified_ids.includes(String(q.id))||O[q.id];return `<span class="chip ${done?'':'hot'}" title="${esc(q.reasons.join('; '))}">${esc(q.app)}${done?' ✓':''}</span>`}).join('');
+$('#qlede').textContent=`${D.review_queue.length} rows tripped a review rule (confidence under 0.6, two or more quotes missing from the cited pages, or a verifier flip). ${D.review_queue.filter(q=>D.verified_ids.includes(String(q.id))||O[q.id]).length} were cleared by the verifier or a human. The rest are shown in red on the matrix and should be treated as unconfirmed.`;
+$('#honest').innerHTML=D.honest.map(h=>`<div><h3>${esc(h[0])}</h3><p>${esc(h[1])}</p></div>`).join('');
+
+/* reveal */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

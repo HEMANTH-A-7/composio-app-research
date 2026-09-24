@@ -1,0 +1,52 @@
+{
+ "22": {
+  "set": {
+   "verdict": "build_now",
+   "blocker": "none"
+  },
+  "note": "Trial account with free credit is enough to build and test; paid upgrade only matters in production (twilio.com/docs/usage/tutorials/how-to-use-your-free-trial-account)."
+ },
+ "24": {
+  "set": {
+   "verdict": "build_now",
+   "blocker": "none"
+  },
+  "note": "A free Lark tenant can create a custom app and get app_id/secret without vendor review; marketplace listing review is only needed for distribution. Judgment call, see verification section."
+ },
+ "49": {
+  "set": {
+   "mcp": "official",
+   "mcp_url": "https://www.npmjs.com/package/@amazon-sp-api-release/sp-api-dev-mcp"
+  },
+  "note": "Amazon ships an official SP-API MCP package (@amazon-sp-api-release/sp-api-dev-mcp). Also: the 2026 SP-API developer fees were cancelled in May 2026."
+ },
+ "58": {
+  "set": {
+   "access": "self_serve_free",
+   "verdict": "build_now",
+   "blocker": "self_host_or_local_only"
+  },
+  "note": "Open-source local CLI with no credentials. Buildable today as a sandboxed skill; the constraint is execution environment, not access."
+ },
+ "72": {
+  "set": {
+   "mcp": "official",
+   "mcp_url": "https://support.airtable.com/docs/using-the-airtable-mcp-server"
+  },
+  "note": "Airtable maintains an official MCP server (support.airtable.com/docs/using-the-airtable-mcp-server)."
+ },
+ "85": {
+  "set": {
+   "verdict": "build_now",
+   "blocker": "none"
+  },
+  "note": "Sandbox keys (ipx_test_) are self-serve from the dashboard; docs inconsistencies are cosmetic, not a blocker (ipayx.ai/docs/mcp-server)."
+ },
+ "98": {
+  "set": {
+   "verdict": "build_now",
+   "blocker": "none"
+  },
+  "note": "Local npm CLI with no auth; renders in any sandbox with Node + Chromium. Buildable today."
+ }
+}

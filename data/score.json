@@ -1,0 +1,513 @@
+{
+ "baseline": {
+  "accuracy": 0.847,
+  "hits": 127,
+  "total": 150,
+  "per_field": {
+   "primary_auth": 1.0,
+   "access": 0.88,
+   "api_style": 1.0,
+   "mcp": 0.64,
+   "verdict": 0.8,
+   "blocker": 0.76
+  },
+  "misses": [
+   {
+    "id": "6",
+    "app": "Podio",
+    "field": "mcp",
+    "got": "community",
+    "gold": "official"
+   },
+   {
+    "id": "19",
+    "app": "Gorgias",
+    "field": "mcp",
+    "got": "community",
+    "gold": "official"
+   },
+   {
+    "id": "20",
+    "app": "Gladly",
+    "field": "mcp",
+    "got": "none_found",
+    "gold": "community"
+   },
+   {
+    "id": "22",
+    "app": "Twilio",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "22",
+    "app": "Twilio",
+    "field": "blocker",
+    "got": "paid_plan",
+    "gold": "none"
+   },
+   {
+    "id": "47",
+    "app": "Ecwid",
+    "field": "access",
+    "got": "self_serve_free",
+    "gold": "paid_plan_required"
+   },
+   {
+    "id": "47",
+    "app": "Ecwid",
+    "field": "verdict",
+    "got": "build_now",
+    "gold": "build_with_friction"
+   },
+   {
+    "id": "47",
+    "app": "Ecwid",
+    "field": "blocker",
+    "got": "none",
+    "gold": "paid_plan"
+   },
+   {
+    "id": "49",
+    "app": "Amazon Selling Partner",
+    "field": "mcp",
+    "got": "community",
+    "gold": "official"
+   },
+   {
+    "id": "58",
+    "app": "Sherlock",
+    "field": "access",
+    "got": "no_public_api",
+    "gold": "self_serve_free"
+   },
+   {
+    "id": "58",
+    "app": "Sherlock",
+    "field": "verdict",
+    "got": "blocked",
+    "gold": [
+     "build_now",
+     "build_with_friction"
+    ]
+   },
+   {
+    "id": "58",
+    "app": "Sherlock",
+    "field": "blocker",
+    "got": "no_public_api",
+    "gold": [
+     "none",
+     "self_host_or_local_only",
+     "tos_or_scraping_risk"
+    ]
+   },
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "access",
+    "got": "partner_or_sales_gated",
+    "gold": "self_serve_free"
+   },
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "mcp",
+    "got": "none_found",
+    "gold": "official"
+   },
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "verdict",
+    "got": "blocked",
+    "gold": "build_now"
+   },
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "blocker",
+    "got": "enterprise_only",
+    "gold": "none"
+   },
+   {
+    "id": "72",
+    "app": "Airtable",
+    "field": "mcp",
+    "got": "community",
+    "gold": "official"
+   },
+   {
+    "id": "78",
+    "app": "Coda",
+    "field": "mcp",
+    "got": "community",
+    "gold": "official"
+   },
+   {
+    "id": "80",
+    "app": "Harvest",
+    "field": "mcp",
+    "got": "community",
+    "gold": "official"
+   },
+   {
+    "id": "85",
+    "app": "iPayX",
+    "field": "mcp",
+    "got": "none_found",
+    "gold": "official"
+   },
+   {
+    "id": "85",
+    "app": "iPayX",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "85",
+    "app": "iPayX",
+    "field": "blocker",
+    "got": "unclear_docs",
+    "gold": "none"
+   },
+   {
+    "id": "92",
+    "app": "Otter AI",
+    "field": "blocker",
+    "got": "unclear_docs",
+    "gold": [
+     "enterprise_only",
+     "paid_plan"
+    ]
+   }
+  ]
+ },
+ "scout": {
+  "accuracy": 0.9,
+  "hits": 135,
+  "total": 150,
+  "per_field": {
+   "primary_auth": 1.0,
+   "access": 0.92,
+   "api_style": 1.0,
+   "mcp": 0.92,
+   "verdict": 0.72,
+   "blocker": 0.84
+  },
+  "misses": [
+   {
+    "id": "22",
+    "app": "Twilio",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "22",
+    "app": "Twilio",
+    "field": "blocker",
+    "got": "paid_plan",
+    "gold": "none"
+   },
+   {
+    "id": "24",
+    "app": "Lark (Larksuite)",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "24",
+    "app": "Lark (Larksuite)",
+    "field": "blocker",
+    "got": "app_review",
+    "gold": "none"
+   },
+   {
+    "id": "49",
+    "app": "Amazon Selling Partner",
+    "field": "mcp",
+    "got": "community",
+    "gold": "official"
+   },
+   {
+    "id": "58",
+    "app": "Sherlock",
+    "field": "access",
+    "got": "no_public_api",
+    "gold": "self_serve_free"
+   },
+   {
+    "id": "58",
+    "app": "Sherlock",
+    "field": "verdict",
+    "got": "blocked",
+    "gold": [
+     "build_now",
+     "build_with_friction"
+    ]
+   },
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "access",
+    "got": "self_serve_trial",
+    "gold": "self_serve_free"
+   },
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "blocker",
+    "got": "paid_plan",
+    "gold": "none"
+   },
+   {
+    "id": "72",
+    "app": "Airtable",
+    "field": "mcp",
+    "got": "community",
+    "gold": "official"
+   },
+   {
+    "id": "78",
+    "app": "Coda",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "85",
+    "app": "iPayX",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "85",
+    "app": "iPayX",
+    "field": "blocker",
+    "got": "unclear_docs",
+    "gold": "none"
+   },
+   {
+    "id": "98",
+    "app": "Mermaid CLI",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   }
+  ]
+ },
+ "lint": {
+  "accuracy": 0.907,
+  "hits": 136,
+  "total": 150,
+  "per_field": {
+   "primary_auth": 1.0,
+   "access": 0.92,
+   "api_style": 1.0,
+   "mcp": 0.92,
+   "verdict": 0.76,
+   "blocker": 0.84
+  },
+  "misses": [
+   {
+    "id": "22",
+    "app": "Twilio",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "22",
+    "app": "Twilio",
+    "field": "blocker",
+    "got": "paid_plan",
+    "gold": "none"
+   },
+   {
+    "id": "24",
+    "app": "Lark (Larksuite)",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "24",
+    "app": "Lark (Larksuite)",
+    "field": "blocker",
+    "got": "app_review",
+    "gold": "none"
+   },
+   {
+    "id": "49",
+    "app": "Amazon Selling Partner",
+    "field": "mcp",
+    "got": "community",
+    "gold": "official"
+   },
+   {
+    "id": "58",
+    "app": "Sherlock",
+    "field": "access",
+    "got": "no_public_api",
+    "gold": "self_serve_free"
+   },
+   {
+    "id": "58",
+    "app": "Sherlock",
+    "field": "verdict",
+    "got": "blocked",
+    "gold": [
+     "build_now",
+     "build_with_friction"
+    ]
+   },
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "access",
+    "got": "self_serve_trial",
+    "gold": "self_serve_free"
+   },
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "blocker",
+    "got": "paid_plan",
+    "gold": "none"
+   },
+   {
+    "id": "72",
+    "app": "Airtable",
+    "field": "mcp",
+    "got": "community",
+    "gold": "official"
+   },
+   {
+    "id": "85",
+    "app": "iPayX",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "85",
+    "app": "iPayX",
+    "field": "blocker",
+    "got": "unclear_docs",
+    "gold": "none"
+   },
+   {
+    "id": "98",
+    "app": "Mermaid CLI",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   }
+  ]
+ },
+ "scout_on_verified": {
+  "accuracy": 0.875,
+  "hits": 42,
+  "total": 48,
+  "per_field": {
+   "primary_auth": 1.0,
+   "access": 0.875,
+   "api_style": 1.0,
+   "mcp": 1.0,
+   "verdict": 0.625,
+   "blocker": 0.75
+  },
+  "misses": [
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "access",
+    "got": "self_serve_trial",
+    "gold": "self_serve_free"
+   },
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "60",
+    "app": "Clay",
+    "field": "blocker",
+    "got": "paid_plan",
+    "gold": "none"
+   },
+   {
+    "id": "78",
+    "app": "Coda",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "85",
+    "app": "iPayX",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "85",
+    "app": "iPayX",
+    "field": "blocker",
+    "got": "unclear_docs",
+    "gold": "none"
+   }
+  ]
+ },
+ "verify": {
+  "accuracy": 0.958,
+  "hits": 46,
+  "total": 48,
+  "per_field": {
+   "primary_auth": 1.0,
+   "access": 1.0,
+   "api_style": 1.0,
+   "mcp": 1.0,
+   "verdict": 0.875,
+   "blocker": 0.875
+  },
+  "misses": [
+   {
+    "id": "85",
+    "app": "iPayX",
+    "field": "verdict",
+    "got": "build_with_friction",
+    "gold": "build_now"
+   },
+   {
+    "id": "85",
+    "app": "iPayX",
+    "field": "blocker",
+    "got": "unclear_docs",
+    "gold": "none"
+   }
+  ]
+ }
+}

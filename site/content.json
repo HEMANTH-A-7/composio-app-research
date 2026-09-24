@@ -1,0 +1,69 @@
+{
+ "repo": "https://github.com/HEMANTH-A-7/composio-app-research",
+ "stages": [
+  {
+   "kind": "agent, no tools",
+   "name": "Baseline",
+   "what": "Same model, schema and rubric, with browsing disabled. It answers from memory, which shows how much the web research actually adds.",
+   "who": "LLM only",
+   "human": false
+  },
+  {
+   "kind": "agent + WebSearch/WebFetch",
+   "name": "Scout",
+   "what": "Finds the official docs and opens the auth, pricing and API reference pages. Returns 19 typed fields plus verbatim evidence quotes.",
+   "who": "LLM, 6 to 10 in parallel",
+   "human": false
+  },
+  {
+   "kind": "deterministic",
+   "name": "Ground",
+   "what": "Fetches every cited URL and checks that the quoted sentence is on the page. Probes composio.dev/toolkits for existing coverage.",
+   "who": "Python, no LLM",
+   "human": false
+  },
+  {
+   "kind": "adversarial agent",
+   "name": "Verify",
+   "what": "A second agent tries to break each scored field using primary docs and the grounding report. It must log every change with a reason.",
+   "who": "LLM, instructed to disagree",
+   "human": false
+  },
+  {
+   "kind": "human gate",
+   "name": "Review",
+   "what": "Rows go to a human when the verifier flipped a scored field, confidence is under 0.6, or two or more quotes were missing from the cited pages. The human also hand-audits the 25-app gold sample.",
+   "who": "Human decides, override logged",
+   "human": true
+  }
+ ],
+ "honest": [
+  [
+   "The verifier only reached 8 apps",
+   "The adversarial pass ran out of usage after 8 of 100 apps (all from the gold sample, which it processes first). It lifted those 8 from 87.5% to 95.8%, but the other 92 published rows are scout output plus lint. Based on the sample, expect about 9 in 10 of their fields to be right."
+  ],
+  [
+   "Research made the verdict field worse",
+   "The closed-book baseline got verdict right 80% of the time; the web-researching scout got 72%. Reading pricing pages made it cautious: it marked free, self-serve apps like Clay, Coda and Mermaid CLI as 'with friction'. The verifier fixed each case it reached. The real fix is a sharper line in the rubric between 'trial credit' and 'paid plan'."
+  ],
+  [
+   "The answer key is one person's judgment",
+   "The same operator wrote the gold set and the rubric. Two misses (Twilio and Lark verdicts) are arguable readings of 'build now' and were kept as misses rather than quietly accepted. Human corrections go into the published data but are left out of the accuracy numbers."
+  ],
+  [
+   "Grounding has blind spots",
+   "17 cited URLs blocked the fetcher (HTTP 400/403), 10 were JavaScript-rendered, and some of the 61 quotes marked 'not found' are paraphrases of text that is on the page. A 'not found' quote sends the row to review; it is not proof the claim is wrong."
+  ],
+  [
+   "Composio coverage is a slug probe",
+   "The 'Composio' column checks composio.dev/toolkits/<slug> for one or two guessed slugs. An existing toolkit under a different slug shows as 'not found', so the easy-wins list may include apps Composio already covers."
+  ],
+  [
+   "The long tail defeated it",
+   "fanbasis, Paygent Connect, Waterfall.io and higgsfield have thin or login-gated docs. The agent gave them low confidence rather than guessing, and they sit in the review queue unresolved."
+  ]
+ ],
+ "copy": {
+  "heat": "Developer tools and productivity apps are 90% free and self-serve, and almost all build now. Support and helpdesk is the opposite: 6 of 10 only offer a trial, so a toolkit there is a race against a 7 to 14 day clock. Ads and ecommerce gate through app review (Google Ads developer tokens, Meta, Pinterest and Shopify review). AI and media apps gate through paid plans."
+ }
+}

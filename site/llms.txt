@@ -1,0 +1,107 @@
+# Toolkit triage: 100 apps researched for Composio
+
+Machine-readable: data.json (full records, scores, gold sample), findings.csv (one row per app).
+Fields: primary_auth, access (self_serve_free|self_serve_trial|paid_plan_required|approval_required|partner_or_sales_gated|no_public_api), mcp (official|community|none_found), verdict (build_now|build_with_friction|blocked), blocker.
+Accuracy on a 25-app hand-audited sample: baseline 85%, scout 90%, lint 91%, scout_on_verified 88%, verify 96%
+
+## Apps
+- Salesforce (CRM & Sales): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- HubSpot (CRM & Sales): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Pipedrive (CRM & Sales): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Attio (CRM & Sales): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Twenty (CRM & Sales): build_now; auth=oauth2; access=self_serve_free; mcp=community; blocker=none
+- Podio (CRM & Sales): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Zoho CRM (CRM & Sales): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Close (CRM & Sales): build_with_friction; auth=oauth2; access=self_serve_trial; mcp=official; blocker=paid_plan
+- Copper (CRM & Sales): build_with_friction; auth=oauth2; access=self_serve_trial; mcp=community; blocker=paid_plan
+- DealCloud (CRM & Sales): blocked; auth=api_key; access=partner_or_sales_gated; mcp=official; blocker=partner_approval
+- Zendesk (Support & Helpdesk): build_with_friction; auth=oauth2; access=self_serve_trial; mcp=community; blocker=paid_plan
+- Intercom (Support & Helpdesk): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Freshdesk (Support & Helpdesk): build_with_friction; auth=api_key; access=self_serve_trial; mcp=official; blocker=paid_plan
+- Front (Support & Helpdesk): build_with_friction; auth=oauth2; access=self_serve_trial; mcp=official; blocker=paid_plan
+- Pylon (Support & Helpdesk): build_with_friction; auth=bearer_token; access=paid_plan_required; mcp=official; blocker=paid_plan
+- LiveAgent (Support & Helpdesk): build_with_friction; auth=api_key; access=self_serve_trial; mcp=official; blocker=paid_plan
+- Plain (Support & Helpdesk): build_with_friction; auth=api_key; access=self_serve_trial; mcp=official; blocker=paid_plan
+- Help Scout (Support & Helpdesk): build_with_friction; auth=oauth2; access=self_serve_trial; mcp=official; blocker=paid_plan
+- Gorgias (Support & Helpdesk): build_with_friction; auth=oauth2; access=approval_required; mcp=official; blocker=app_review
+- Gladly (Support & Helpdesk): blocked; auth=basic; access=partner_or_sales_gated; mcp=community; blocker=enterprise_only
+- Slack (Communications): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Twilio (Communications): build_now; auth=basic; access=self_serve_trial; mcp=official; blocker=none
+- Zoho Cliq (Communications): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Lark (Larksuite) (Communications): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Pumble (Communications): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Discord (Communications): build_now; auth=oauth2; access=self_serve_free; mcp=community; blocker=none
+- Telegram (Communications): build_now; auth=bearer_token; access=self_serve_free; mcp=community; blocker=none
+- WhatsApp Business (Communications): build_with_friction; auth=oauth2; access=approval_required; mcp=official; blocker=app_review
+- Aircall (Communications): build_with_friction; auth=oauth2; access=approval_required; mcp=community; blocker=partner_approval
+- Vonage (Communications): build_now; auth=api_key; access=self_serve_free; mcp=official; blocker=none
+- Google Ads (Marketing & Ads): build_with_friction; auth=oauth2; access=approval_required; mcp=official; blocker=partner_approval
+- Meta Ads (Marketing & Ads): build_with_friction; auth=oauth2; access=approval_required; mcp=official; blocker=app_review
+- LinkedIn Ads (Marketing & Ads): build_with_friction; auth=oauth2; access=approval_required; mcp=community; blocker=app_review
+- GoHighLevel (Marketing & Ads): build_with_friction; auth=oauth2; access=self_serve_trial; mcp=official; blocker=paid_plan
+- Mailchimp (Marketing & Ads): build_now; auth=oauth2; access=self_serve_free; mcp=community; blocker=none
+- Klaviyo (Marketing & Ads): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- systeme.io (Marketing & Ads): build_now; auth=api_key; access=self_serve_free; mcp=official; blocker=none
+- Pinterest (Marketing & Ads): build_with_friction; auth=oauth2; access=approval_required; mcp=community; blocker=app_review
+- Threads (Meta) (Marketing & Ads): build_with_friction; auth=oauth2; access=approval_required; mcp=community; blocker=app_review
+- SendGrid (Marketing & Ads): build_with_friction; auth=api_key; access=self_serve_trial; mcp=community; blocker=paid_plan
+- Shopify (Ecommerce): build_with_friction; auth=oauth2; access=approval_required; mcp=official; blocker=app_review
+- WooCommerce (Ecommerce): build_now; auth=api_key; access=self_serve_free; mcp=official; blocker=none
+- BigCommerce (Ecommerce): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Salesforce Commerce Cloud (Ecommerce): blocked; auth=oauth2; access=partner_or_sales_gated; mcp=official; blocker=partner_approval
+- Magento (Adobe Commerce) (Ecommerce): build_with_friction; auth=bearer_token; access=self_serve_free; mcp=community; blocker=self_host_or_local_only
+- Squarespace (Ecommerce): build_with_friction; auth=oauth2; access=approval_required; mcp=official; blocker=app_review
+- Ecwid (Ecommerce): build_with_friction; auth=oauth2; access=paid_plan_required; mcp=community; blocker=paid_plan
+- Gumroad (Ecommerce): build_now; auth=oauth2; access=self_serve_free; mcp=community; blocker=none
+- Amazon Selling Partner (Ecommerce): build_with_friction; auth=oauth2; access=approval_required; mcp=official; blocker=app_review
+- fanbasis (Ecommerce): build_with_friction; auth=api_key; access=self_serve_free; mcp=community; blocker=unclear_docs
+- DataForSEO (Data SEO & Scraping): build_now; auth=basic; access=self_serve_free; mcp=official; blocker=none
+- SE Ranking (Data SEO & Scraping): build_with_friction; auth=api_key; access=self_serve_trial; mcp=official; blocker=paid_plan
+- Ahrefs (Data SEO & Scraping): build_with_friction; auth=bearer_token; access=paid_plan_required; mcp=official; blocker=paid_plan
+- MrScraper (Data SEO & Scraping): build_now; auth=api_key; access=self_serve_free; mcp=official; blocker=none
+- Apify (Data SEO & Scraping): build_now; auth=bearer_token; access=self_serve_free; mcp=official; blocker=none
+- Firecrawl (Data SEO & Scraping): build_now; auth=api_key; access=self_serve_free; mcp=official; blocker=none
+- Bright Data (Data SEO & Scraping): build_now; auth=bearer_token; access=self_serve_free; mcp=official; blocker=none
+- Sherlock (Data SEO & Scraping): build_now; auth=none; access=self_serve_free; mcp=community; blocker=self_host_or_local_only
+- Waterfall.io (Data SEO & Scraping): build_with_friction; auth=api_key; access=partner_or_sales_gated; mcp=none_found; blocker=partner_approval
+- Clay (Data SEO & Scraping): build_now; auth=api_key; access=self_serve_free; mcp=official; blocker=none
+- GitHub (Developer & Infra): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Vercel (Developer & Infra): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Netlify (Developer & Infra): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Cloudflare (Developer & Infra): build_now; auth=bearer_token; access=self_serve_free; mcp=official; blocker=none
+- Supabase (Developer & Infra): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Neo4j (Developer & Infra): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Snowflake (Developer & Infra): build_with_friction; auth=oauth2; access=self_serve_trial; mcp=official; blocker=paid_plan
+- MongoDB Atlas (Developer & Infra): build_now; auth=api_key; access=self_serve_free; mcp=official; blocker=none
+- Datadog (Developer & Infra): build_now; auth=api_key; access=self_serve_free; mcp=official; blocker=none
+- Sentry (Developer & Infra): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Notion (Productivity & PM): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Airtable (Productivity & PM): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Linear (Productivity & PM): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Jira (Productivity & PM): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Asana (Productivity & PM): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Monday.com (Productivity & PM): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- ClickUp (Productivity & PM): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Coda (Productivity & PM): build_now; auth=bearer_token; access=self_serve_free; mcp=official; blocker=none
+- Smartsheet (Productivity & PM): build_with_friction; auth=oauth2; access=paid_plan_required; mcp=official; blocker=paid_plan
+- Harvest (Productivity & PM): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Stripe (Finance & Fintech): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Plaid (Finance & Fintech): build_with_friction; auth=api_key; access=approval_required; mcp=official; blocker=app_review
+- Binance (Finance & Fintech): build_now; auth=api_key; access=self_serve_free; mcp=community; blocker=none
+- Paygent Connect (Finance & Fintech): build_now; auth=api_key; access=self_serve_free; mcp=none_found; blocker=none
+- iPayX (Finance & Fintech): build_now; auth=api_key; access=self_serve_free; mcp=official; blocker=none
+- QuickBooks (Finance & Fintech): build_with_friction; auth=oauth2; access=approval_required; mcp=official; blocker=app_review
+- Xero (Finance & Fintech): build_with_friction; auth=oauth2; access=approval_required; mcp=official; blocker=paid_plan
+- Brex (Finance & Fintech): blocked; auth=oauth2; access=partner_or_sales_gated; mcp=official; blocker=partner_approval
+- Ramp (Finance & Fintech): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- PitchBook (Finance & Fintech): blocked; auth=api_key; access=partner_or_sales_gated; mcp=official; blocker=partner_approval
+- NotebookLM (AI Research & Media): build_with_friction; auth=oauth2; access=paid_plan_required; mcp=community; blocker=paid_plan
+- Otter AI (AI Research & Media): blocked; auth=bearer_token; access=partner_or_sales_gated; mcp=official; blocker=enterprise_only
+- Fathom (AI Research & Media): build_now; auth=oauth2; access=self_serve_free; mcp=official; blocker=none
+- Consensus (AI Research & Media): build_with_friction; auth=api_key; access=paid_plan_required; mcp=official; blocker=paid_plan
+- Reducto (AI Research & Media): build_now; auth=api_key; access=self_serve_free; mcp=official; blocker=none
+- Devin (AI Research & Media): build_with_friction; auth=bearer_token; access=paid_plan_required; mcp=official; blocker=paid_plan
+- higgsfield (AI Research & Media): build_with_friction; auth=api_key; access=paid_plan_required; mcp=official; blocker=paid_plan
+- Mermaid CLI (AI Research & Media): build_now; auth=none; access=self_serve_free; mcp=community; blocker=none
+- YouTube Transcript (AI Research & Media): build_now; auth=api_key; access=self_serve_free; mcp=official; blocker=none
+- Grain (AI Research & Media): build_with_friction; auth=oauth2; access=paid_plan_required; mcp=official; blocker=paid_plan

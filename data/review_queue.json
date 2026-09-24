@@ -1,0 +1,203 @@
+[
+ {
+  "id": "15",
+  "app": "Pylon",
+  "reasons": [
+   "low confidence 0.55"
+  ]
+ },
+ {
+  "id": "18",
+  "app": "Help Scout",
+  "reasons": [
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "19",
+  "app": "Gorgias",
+  "reasons": [
+   "verifier changed access, blocker"
+  ]
+ },
+ {
+  "id": "20",
+  "app": "Gladly",
+  "reasons": [
+   "verifier changed blocker",
+   "low confidence 0.55"
+  ]
+ },
+ {
+  "id": "25",
+  "app": "Pumble",
+  "reasons": [
+   "low confidence 0.55"
+  ]
+ },
+ {
+  "id": "29",
+  "app": "Aircall",
+  "reasons": [
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "34",
+  "app": "GoHighLevel",
+  "reasons": [
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "44",
+  "app": "Salesforce Commerce Cloud",
+  "reasons": [
+   "low confidence 0.55"
+  ]
+ },
+ {
+  "id": "45",
+  "app": "Magento (Adobe Commerce)",
+  "reasons": [
+   "low confidence 0.55"
+  ]
+ },
+ {
+  "id": "47",
+  "app": "Ecwid",
+  "reasons": [
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "48",
+  "app": "Gumroad",
+  "reasons": [
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "50",
+  "app": "fanbasis",
+  "reasons": [
+   "low confidence 0.5"
+  ]
+ },
+ {
+  "id": "52",
+  "app": "SE Ranking",
+  "reasons": [
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "54",
+  "app": "MrScraper",
+  "reasons": [
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "56",
+  "app": "Firecrawl",
+  "reasons": [
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "59",
+  "app": "Waterfall.io",
+  "reasons": [
+   "low confidence 0.5"
+  ]
+ },
+ {
+  "id": "60",
+  "app": "Clay",
+  "reasons": [
+   "verifier changed access, blocker, verdict"
+  ]
+ },
+ {
+  "id": "69",
+  "app": "Datadog",
+  "reasons": [
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "71",
+  "app": "Notion",
+  "reasons": [
+   "dead evidence link in pass 1"
+  ]
+ },
+ {
+  "id": "78",
+  "app": "Coda",
+  "reasons": [
+   "verifier changed verdict"
+  ]
+ },
+ {
+  "id": "84",
+  "app": "Paygent Connect",
+  "reasons": [
+   "low confidence 0.5"
+  ]
+ },
+ {
+  "id": "85",
+  "app": "iPayX",
+  "reasons": [
+   "low confidence 0.55",
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "88",
+  "app": "Brex",
+  "reasons": [
+   "low confidence 0.55"
+  ]
+ },
+ {
+  "id": "94",
+  "app": "Consensus",
+  "reasons": [
+   "low confidence 0.55",
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "96",
+  "app": "Devin",
+  "reasons": [
+   "low confidence 0.55",
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "97",
+  "app": "higgsfield",
+  "reasons": [
+   "low confidence 0.55",
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "99",
+  "app": "YouTube Transcript",
+  "reasons": [
+   "2+ quotes not found on cited pages"
+  ]
+ },
+ {
+  "id": "100",
+  "app": "Grain",
+  "reasons": [
+   "2+ quotes not found on cited pages"
+  ]
+ }
+]
