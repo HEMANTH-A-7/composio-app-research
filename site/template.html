@@ -54,7 +54,7 @@ nav .links a:hover{color:var(--chalk)}
 .hero{border:0;padding:56px 0 64px;min-height:calc(100dvh - 60px);display:flex;align-items:center}
 .hero .grid{display:grid;grid-template-columns:1fr;gap:48px;align-items:center}
 @media(min-width:1024px){.hero .grid{grid-template-columns:7fr 5fr}}
-.hero h1{margin:0;color:var(--chalk);font-size:clamp(2rem,4.6vw,3.9rem);line-height:1.08}
+.hero h1{margin:0;color:var(--chalk);font-size:clamp(1.9rem,3.4vw,3rem);line-height:1.1}
 .hero h1 .dim{color:var(--grey)}
 .hero h1 .hot{color:var(--hot)}
 .hero .sub{margin-top:26px;font-size:1.12rem;max-width:44ch}
@@ -88,7 +88,7 @@ nav .links a:hover{color:var(--chalk)}
 @media(min-width:900px){.findings{grid-template-columns:1fr 1fr}}
 .finding{padding:30px 0 34px;border-bottom:1px solid var(--line);display:flex;flex-direction:column}
 .finding .viz{margin-top:auto}
-@media(min-width:900px){.finding:nth-child(odd){padding-right:40px;border-right:1px solid var(--line)}.finding:nth-child(even){padding-left:40px}}
+@media(min-width:900px){.finding.l{padding-right:40px;border-right:1px solid var(--line)}.finding.r{padding-left:40px}}
 .finding .num{font-size:clamp(2.6rem,5vw,3.8rem);color:var(--chalk);line-height:1;margin-bottom:14px}
 .finding .num small{font-size:.45em;color:var(--grey)}
 .finding.wide{grid-column:1/-1;padding-right:0!important;border-right:0!important}
@@ -379,7 +379,7 @@ F.push({num:`${mcp.official||0}`,t:`${mcp.official||0} apps already ship an offi
 F.push({wide:1,t:`Easy wins vs. outreach`,b:`Easy wins are rated build now, have no Composio toolkit page, and are not waiting in the review queue. Outreach means a partner or sales gate, or an approval queue, where a BD conversation comes before engineering. Composio already has public toolkit pages for ${inComposio} of the ${N}.`,
   x:`<div class="lists"><div><h3>Easy wins: build now, not on Composio yet (${easy.length})</h3><div class="chips">${easy.map(r=>`<a class="chip" href="#r${r.id}" onclick="openRow(${r.id});return false">${esc(r.app)}</a>`).join('')}</div></div>
      <div><h3>Needs outreach first (${outreach.length})</h3><div class="chips">${outreach.map(r=>`<a class="chip hot" href="#r${r.id}" onclick="openRow(${r.id});return false">${esc(r.app)}</a>`).join('')}</div></div></div>`});
-$('#findings').innerHTML=F.map(f=>`<div class="finding reveal ${f.wide?'wide':''}">${f.num?`<div class="num ax">${f.num}</div>`:''}<h3>${f.t}</h3><p>${f.b}</p><div class="viz">${f.x||''}</div></div>`).join('');
+let side=0;$('#findings').innerHTML=F.map(f=>`<div class="finding reveal ${f.wide?(side=0,'wide'):(side++%2?'r':'l')}">${f.num?`<div class="num ax">${f.num}</div>`:''}<h3>${f.t}</h3><p>${f.b}</p><div class="viz">${f.x||''}</div></div>`).join('');
 
 /* matrix */
 cats.forEach(c=>$('#fcat').insertAdjacentHTML('beforeend',`<option>${esc(c)}</option>`));
