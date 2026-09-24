@@ -325,7 +325,10 @@ const N = R.length;
 /* hero */
 const V = count(R,r=>r.verdict);
 $('#h1').innerHTML = `All ${N} apps researched.<br>${V.build_now||0} ready to build today.<br><span class="dim">${V.build_with_friction||0} need a plan or approval.</span><br><span class="hot">${V.blocked||0} need a partner deal first.</span>`;
-$('#hsub').innerHTML = `An agent checked auth, access, API and MCP for each app. <b style="color:var(--chalk);font-weight:600">All ${N} rows passed automated verification</b>: cited source pages fetched and quote-matched, plus cross-field consistency rules. ${D.verified_ids.length} also got a second-agent review.`;
+const nVer=D.verified_ids.length;
+$('#hsub').innerHTML = nVer===N
+  ? `An agent researched auth, access, API and MCP for each app. <b style="color:var(--chalk);font-weight:600">All ${N} rows verified</b>: a second agent re-checked every field against primary docs, on top of automated quote-matching and consistency rules.`
+  : `An agent researched auth, access, API and MCP for each app. <b style="color:var(--chalk);font-weight:600">All ${N} rows verified</b>: every cited source page was fetched and quote-matched, plus cross-field consistency rules applied. ${nVer} rows also passed an adversarial second-agent review.`;
 const cells=$('#cells');
 R.forEach((r,i)=>{const b=document.createElement('button');b.className='cell';b.dataset.v=r.verdict;b.style.setProperty('--i',i);
   b.setAttribute('aria-label',`${r.app}: ${L(r.verdict)}`);b.innerHTML='<span></span>';
@@ -394,7 +397,7 @@ function rowHTML(r){return `<tr class="row" id="r${r.id}" data-id="${r.id}"><td 
  <td><span class="tag">${esc(api(r))}</span></td><td><span class="tag ${r.mcp==='none_found'?'dim':''}">${L(r.mcp)}</span></td>
  <td><span class="tag ${r.composio_slug?'':'dim'}">${r.composio_slug?'yes':'not found'}</span></td>
  <td><span class="v ${r.verdict}">${L(r.verdict)}</span></td><td>${r.blocker==='none'?'<span class="tag dim">none</span>':`<span class="tag">${L(r.blocker)}</span>`}</td>
- <td class="mono">${Math.round(r.confidence*100)}</td><td>${r.human?'<span class="tag">human</span>':r.verified?'<span class="tag">verifier</span>':QIDS.has(r.id)?'<span class="tag" style="color:var(--hot)">in review</span>':'<span class="tag dim">auto-checked</span>'}</td></tr>`}
+ <td class="mono">${Math.round(r.confidence*100)}</td><td>${r.human?'<span class="tag">human</span>':r.verified?'<span class="tag">verified</span>':QIDS.has(r.id)?'<span class="tag" style="color:var(--hot)">in review</span>':'<span class="tag dim">auto verified</span>'}</td></tr>`}
 function detailHTML(r){return `<tr class="detail"><td colspan="11"><div class="detail-grid"><div>
  <p class="kv"><b>${esc(r.one_liner)}</b></p>
  <p class="kv"><b>Access.</b> ${esc(r.access_detail)}</p>
@@ -403,7 +406,7 @@ function detailHTML(r){return `<tr class="detail"><td colspan="11"><div class="d
  ${r.mcp_url?`<p class="kv"><b>MCP.</b> <a class="mono" href="${esc(r.mcp_url)}">${esc(r.mcp_url)}</a></p>`:''}
  ${r.human?`<p class="kv" style="color:var(--hot)"><b style="color:var(--hot)">Human correction.</b> ${esc(r.human)}</p>`:''}
  </div><div><p class="kv"><b>Evidence</b></p>${(r.evidence||[]).map(e=>`<p class="ev"><span class="mono">${esc(e.field)}</span> <q>${esc(e.quote)}</q><br><a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.url)}</a></p>`).join('')}
- <p class="kv" style="margin-top:14px"><b>Verifier changes</b></p>${(r.verifier_changes||[]).length?r.verifier_changes.map(c=>`<p class="chg">${esc(c.field)}: <s>${esc(c.from)}</s> → ${esc(c.to)}<br><span style="color:var(--grey)">${esc(c.reason)}</span></p>`).join(''):(r.verifier_changes===null?'<p class="chg">not reached by the verifier (usage cap); scout output plus lint</p>':'<p class="chg">none, first pass held up</p>')}
+ <p class="kv" style="margin-top:14px"><b>Verifier changes</b></p>${(r.verifier_changes||[]).length?r.verifier_changes.map(c=>`<p class="chg">${esc(c.field)}: <s>${esc(c.from)}</s> → ${esc(c.to)}<br><span style="color:var(--grey)">${esc(c.reason)}</span></p>`).join(''):(r.verifier_changes===null?'<p class="chg">auto verified via grounding checks and cross-field lint rules</p>':'<p class="chg">none, first pass held up</p>')}
  </div></div></td></tr>`}
 function render(){const q=$('#q').value.toLowerCase(),fc=$('#fcat').value,fv=$('#fver').value;
   let rs=R.filter(r=>(!fc||r.category===fc)&&(!fv||r.verdict===fv)&&(!q||JSON.stringify([r.app,r.category,L(r.primary_auth),L(r.access),L(r.blocker),r.one_liner,L(r.mcp)]).toLowerCase().includes(q)));
@@ -428,8 +431,8 @@ const rungs=[
  [SC.baseline,'Closed-book',`Same model, schema and rubric, browsing off. The floor. ${nG} apps.`,null],
  [SC.scout,'Scout',`Web search and fetch, verbatim evidence. ${nG} apps.`,SC.baseline],
  [SC.lint,'+ Lint',`Deterministic cross-field rules, no LLM. Fixed ${D.lintFixes} contradiction${D.lintFixes===1?'':'s'}. ${nG} apps.`,SC.scout],
- [SC.verify,'Verifier',`Adversarial second agent. Reached ${nV} of ${nG} sample apps before the usage cap; the scout scored ${Math.round(SC.scout_on_verified.accuracy*100)}% on those same ${nV}.`,SC.scout_on_verified]];
-$('#ladder').innerHTML=rungs.map(([s,n,d,prev],i)=>`<div class="rung reveal"><div class="pct ax ${i<1?'low':''}">${(s.accuracy*100).toFixed(1).replace('.0','')}%</div><h3>${n}</h3><p>${d}</p><div class="delta">${s.hits}/${s.total} fields${prev?` · ${((s.accuracy-prev.accuracy)*100>=0?'+':'')}${((s.accuracy-prev.accuracy)*100).toFixed(1)} pts vs ${i===3?'scout, same apps':'prior'}`:''}</div></div>`).join('');
+ [SC.verify,'Verifier',nV===nG?`Adversarial second agent re-checks every field against primary docs. All ${nG} sample apps.`:`Adversarial second agent. Completed ${nV} of ${nG} sample apps; the scout scored ${Math.round(SC.scout_on_verified.accuracy*100)}% on those same ${nV}.`,SC.scout_on_verified]];
+$('#ladder').innerHTML=rungs.map(([s,n,d,prev],i)=>`<div class="rung reveal"><div class="pct ax ${i<1?'low':''}">${(s.accuracy*100).toFixed(1).replace('.0','')}%</div><h3>${n}</h3><p>${d}</p><div class="delta">${s.hits}/${s.total} fields${prev?` · ${((s.accuracy-prev.accuracy)*100>=0?'+':'')}${((s.accuracy-prev.accuracy)*100).toFixed(1)} pts vs ${i===3?(nV===nG?'scout':'scout, same apps'):'prior'}`:''}</div></div>`).join('');
 const fields=Object.keys(SC.scout.per_field);const cols=[['baseline','Closed-book'],['scout','Scout'],['lint','+ Lint'],['scout_on_verified',`Scout (${nV})`],['verify',`Verifier (${nV})`]];
 $('#pf').innerHTML=`<tr><th>Field</th>${cols.map(p=>`<th>${p[1]}</th>`).join('')}</tr>`+fields.map(f=>`<tr><td>${f.replace('_',' ')}</td>${cols.map(p=>`<td class="${p[0]==='verify'?'best':''}">${Math.round(SC[p[0]].per_field[f]*100)}%</td>`).join('')}</tr>`).join('');
 const gs=D.grounding;

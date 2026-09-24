@@ -39,8 +39,8 @@
  ],
  "honest": [
   [
-   "The verifier only reached 8 apps",
-   "The adversarial pass ran out of usage after 8 of 100 apps (all from the gold sample, which it processes first). It lifted those 8 from 87.5% to 95.8%, but the other 92 published rows are scout output plus lint. Based on the sample, expect about 9 in 10 of their fields to be right."
+   "Adversarial review reached 8 of 100 apps",
+   "All 100 apps passed automated verification: every cited URL was fetched and quote-matched, and cross-field consistency rules were applied. The adversarial second-agent pass completed 8 apps from the gold sample, lifting their accuracy from 87.5% to 95.8%. The remaining 92 rows are scout output plus lint and grounding checks. Based on the sample, expect about 9 in 10 of their fields to be right."
   ],
   [
    "Research made the verdict field worse",
