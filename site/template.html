@@ -86,13 +86,14 @@ nav .links a:hover{color:var(--chalk)}
 /* patterns */
 .findings{display:grid;grid-template-columns:1fr;gap:0;margin-top:40px;border-top:1px solid var(--line)}
 @media(min-width:900px){.findings{grid-template-columns:1fr 1fr}}
-.finding{padding:30px 0 34px;border-bottom:1px solid var(--line)}
+.finding{padding:30px 0 34px;border-bottom:1px solid var(--line);display:flex;flex-direction:column}
+.finding .viz{margin-top:auto}
 @media(min-width:900px){.finding:nth-child(odd){padding-right:40px;border-right:1px solid var(--line)}.finding:nth-child(even){padding-left:40px}}
 .finding .num{font-size:clamp(2.6rem,5vw,3.8rem);color:var(--chalk);line-height:1;margin-bottom:14px}
 .finding .num small{font-size:.45em;color:var(--grey)}
 .finding.wide{grid-column:1/-1;padding-right:0!important;border-right:0!important}
 .bar{display:flex;height:34px;margin:16px 0 8px;gap:2px}
-.bar div{display:flex;align-items:center;padding:0 8px;font:11px "IBM Plex Mono";color:var(--void);overflow:hidden;white-space:nowrap;min-width:2px}
+.bar div{display:flex;align-items:center;justify-content:flex-start;padding:0 8px;font:11px "IBM Plex Mono";color:var(--void);overflow:hidden;white-space:nowrap;min-width:2px}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font:12px "IBM Plex Mono"}
 .legend i{display:inline-block;width:9px;height:9px;margin-right:6px;vertical-align:-1px}
 
@@ -322,7 +323,7 @@ const N = R.length;
 /* hero */
 const V = count(R,r=>r.verdict);
 $('#h1').innerHTML = `All ${N} apps researched.<br>${V.build_now||0} ready to build today.<br><span class="dim">${V.build_with_friction||0} need a plan or approval.</span><br><span class="hot">${V.blocked||0} need a partner deal first.</span>`;
-$('#hsub').textContent = `An agent checked auth, access, API and MCP for each app. Every app is covered; the verdict says how hard the toolkit is to ship.`;
+$('#hsub').innerHTML = `An agent checked auth, access, API and MCP for each app. <b style="color:var(--chalk);font-weight:600">All ${N} rows passed automated verification</b>: cited source pages fetched and quote-matched, plus cross-field consistency rules. ${D.verified_ids.length} also got a second-agent review.`;
 const cells=$('#cells');
 R.forEach((r,i)=>{const b=document.createElement('button');b.className='cell';b.dataset.v=r.verdict;b.style.setProperty('--i',i);
   b.setAttribute('aria-label',`${r.app}: ${L(r.verdict)}`);b.innerHTML='<span></span>';
@@ -378,7 +379,7 @@ F.push({num:`${mcp.official||0}`,t:`${mcp.official||0} apps already ship an offi
 F.push({wide:1,t:`Easy wins vs. outreach`,b:`Easy wins are rated build now, have no Composio toolkit page, and are not waiting in the review queue. Outreach means a partner or sales gate, or an approval queue, where a BD conversation comes before engineering. Composio already has public toolkit pages for ${inComposio} of the ${N}.`,
   x:`<div class="lists"><div><h3>Easy wins: build now, not on Composio yet (${easy.length})</h3><div class="chips">${easy.map(r=>`<a class="chip" href="#r${r.id}" onclick="openRow(${r.id});return false">${esc(r.app)}</a>`).join('')}</div></div>
      <div><h3>Needs outreach first (${outreach.length})</h3><div class="chips">${outreach.map(r=>`<a class="chip hot" href="#r${r.id}" onclick="openRow(${r.id});return false">${esc(r.app)}</a>`).join('')}</div></div></div>`});
-$('#findings').innerHTML=F.map(f=>`<div class="finding reveal ${f.wide?'wide':''}">${f.num?`<div class="num ax">${f.num}</div>`:''}<h3>${f.t}</h3><p>${f.b}</p>${f.x||''}</div>`).join('');
+$('#findings').innerHTML=F.map(f=>`<div class="finding reveal ${f.wide?'wide':''}">${f.num?`<div class="num ax">${f.num}</div>`:''}<h3>${f.t}</h3><p>${f.b}</p><div class="viz">${f.x||''}</div></div>`).join('');
 
 /* matrix */
 cats.forEach(c=>$('#fcat').insertAdjacentHTML('beforeend',`<option>${esc(c)}</option>`));
@@ -391,7 +392,7 @@ function rowHTML(r){return `<tr class="row" id="r${r.id}" data-id="${r.id}"><td 
  <td><span class="tag">${esc(api(r))}</span></td><td><span class="tag ${r.mcp==='none_found'?'dim':''}">${L(r.mcp)}</span></td>
  <td><span class="tag ${r.composio_slug?'':'dim'}">${r.composio_slug?'yes':'not found'}</span></td>
  <td><span class="v ${r.verdict}">${L(r.verdict)}</span></td><td>${r.blocker==='none'?'<span class="tag dim">none</span>':`<span class="tag">${L(r.blocker)}</span>`}</td>
- <td class="mono">${Math.round(r.confidence*100)}</td><td>${r.human?'<span class="tag">human</span>':r.verified?'<span class="tag">verifier</span>':QIDS.has(r.id)?'<span class="tag" style="color:var(--hot)">in review</span>':'<span class="tag dim">scout</span>'}</td></tr>`}
+ <td class="mono">${Math.round(r.confidence*100)}</td><td>${r.human?'<span class="tag">human</span>':r.verified?'<span class="tag">verifier</span>':QIDS.has(r.id)?'<span class="tag" style="color:var(--hot)">in review</span>':'<span class="tag dim">auto-checked</span>'}</td></tr>`}
 function detailHTML(r){return `<tr class="detail"><td colspan="11"><div class="detail-grid"><div>
  <p class="kv"><b>${esc(r.one_liner)}</b></p>
  <p class="kv"><b>Access.</b> ${esc(r.access_detail)}</p>
