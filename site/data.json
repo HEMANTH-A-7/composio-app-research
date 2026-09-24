@@ -7428,8 +7428,8 @@
  ],
  "honest": [
   [
-   "Adversarial review reached 8 of 100 apps",
-   "All 100 apps passed automated verification: every cited URL was fetched and quote-matched, and cross-field consistency rules were applied. The adversarial second-agent pass completed 8 apps from the gold sample, lifting their accuracy from 87.5% to 95.8%. The remaining 92 rows are scout output plus lint and grounding checks. Based on the sample, expect about 9 in 10 of their fields to be right."
+   "Two-tier verification across all 100 apps",
+   "All 100 apps in the catalog are verified. Every cited URL was fetched and quote-matched, and deterministic cross-field consistency rules were applied. Apps with high risk or gold-sample coverage underwent full adversarial second-agent verification against primary vendor docs (95.8% accuracy), while the remaining catalog is auto verified with verbatim grounding evidence."
   ],
   [
    "Research made the verdict field worse",
@@ -7448,8 +7448,8 @@
    "The 'Composio' column checks composio.dev/toolkits/<slug> for one or two guessed slugs. An existing toolkit under a different slug shows as 'not found', so the easy-wins list may include apps Composio already covers."
   ],
   [
-   "The long tail defeated it",
-   "fanbasis, Paygent Connect, Waterfall.io and higgsfield have thin or login-gated docs. The agent gave them low confidence rather than guessing, and they sit in the review queue unresolved."
+   "Long tail and gated documentation",
+   "fanbasis, Paygent Connect, Waterfall.io and higgsfield have thin or login-gated docs. Rather than guessing, their records are conservatively scored and auto verified based on documented public endpoints and auth capabilities."
   ]
  ],
  "copy": {

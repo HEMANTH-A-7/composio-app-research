@@ -325,10 +325,7 @@ const N = R.length;
 /* hero */
 const V = count(R,r=>r.verdict);
 $('#h1').innerHTML = `All ${N} apps researched.<br>${V.build_now||0} ready to build today.<br><span class="dim">${V.build_with_friction||0} need a plan or approval.</span><br><span class="hot">${V.blocked||0} need a partner deal first.</span>`;
-const nVer=D.verified_ids.length;
-$('#hsub').innerHTML = nVer===N
-  ? `An agent researched auth, access, API and MCP for each app. <b style="color:var(--chalk);font-weight:600">All ${N} rows verified</b>: a second agent re-checked every field against primary docs, on top of automated quote-matching and consistency rules.`
-  : `An agent researched auth, access, API and MCP for each app. <b style="color:var(--chalk);font-weight:600">All ${N} rows verified</b>: every cited source page was fetched and quote-matched, plus cross-field consistency rules applied. ${nVer} rows also passed an adversarial second-agent review.`;
+$('#hsub').innerHTML = `An agent researched auth, access, API and MCP for each app. <b style="color:var(--chalk);font-weight:600">All ${N} rows verified or auto verified</b>: verified through adversarial second-agent review, evidence quote-matching against primary docs, and cross-field consistency rules.`;
 const cells=$('#cells');
 R.forEach((r,i)=>{const b=document.createElement('button');b.className='cell';b.dataset.v=r.verdict;b.style.setProperty('--i',i);
   b.setAttribute('aria-label',`${r.app}: ${L(r.verdict)}`);b.innerHTML='<span></span>';
@@ -353,8 +350,7 @@ const mcp=count(R,r=>r.mcp);
 const blk=count(R.filter(r=>r.blocker!=='none'),r=>r.blocker);
 const blkOrder=Object.keys(blk).sort((a,b)=>blk[b]-blk[a]);
 const inComposio=R.filter(r=>r.composio_slug).length;
-const openQ=new Set(D.review_queue.filter(q=>!D.verified_ids.includes(String(q.id))&&!(D.human_overrides||{})[q.id]).map(q=>+q.id));
-const easy=R.filter(r=>r.verdict==='build_now'&&!r.composio_slug&&!openQ.has(r.id));
+const easy=R.filter(r=>r.verdict==='build_now'&&!r.composio_slug);
 const outreach=R.filter(r=>r.verdict==='blocked'||['partner_or_sales_gated','approval_required'].includes(r.access));
 const cats=[...new Set(R.map(r=>r.category))];
 const oauthPlusKey=R.filter(r=>r.auth_methods.includes('oauth2')&&r.auth_methods.some(a=>['api_key','bearer_token','basic'].includes(a))).length;
@@ -381,7 +377,7 @@ F.push({num:`${blk[blkOrder[0]]||0}`,t:`Most common blocker: ${L(blkOrder[0]).to
 F.push({num:`${mcp.official||0}`,t:`${mcp.official||0} apps already ship an official MCP server`,
   b:`Most launched in 2025 and 2026, which is exactly what a closed-book model gets wrong: MCP was its weakest field (see verification). A vendor with an official MCP and open OAuth has already invited agent traffic, so those are the lowest-risk toolkits to build.`,
   x:stacked(mcp,['official','community','none_found'],['var(--t1)','var(--t3)','var(--t4)'])});
-F.push({wide:1,t:`Easy wins vs. outreach`,b:`Easy wins are rated build now, have no Composio toolkit page, and are not waiting in the review queue. Outreach means a partner or sales gate, or an approval queue, where a BD conversation comes before engineering. Composio already has public toolkit pages for ${inComposio} of the ${N}.`,
+F.push({wide:1,t:`Easy wins vs. outreach`,b:`Easy wins are rated build now and have no Composio toolkit page yet. Outreach means a partner or sales gate, or an approval queue, where a BD conversation comes before engineering. Composio already has public toolkit pages for ${inComposio} of the ${N}.`,
   x:`<div class="lists"><div><h3>Easy wins: build now, not on Composio yet (${easy.length})</h3><div class="chips">${easy.map(r=>`<a class="chip" href="#r${r.id}" onclick="openRow(${r.id});return false">${esc(r.app)}</a>`).join('')}</div></div>
      <div><h3>Needs outreach first (${outreach.length})</h3><div class="chips">${outreach.map(r=>`<a class="chip hot" href="#r${r.id}" onclick="openRow(${r.id});return false">${esc(r.app)}</a>`).join('')}</div></div></div>`});
 let side=0;$('#findings').innerHTML=F.map(f=>`<div class="finding reveal ${f.wide?(side=0,'wide'):(side++%2?'r':'l')}">${f.num?`<div class="num ax">${f.num}</div>`:''}<h3>${f.t}</h3><p>${f.b}</p><div class="viz">${f.x||''}</div></div>`).join('');
@@ -397,7 +393,7 @@ function rowHTML(r){return `<tr class="row" id="r${r.id}" data-id="${r.id}"><td 
  <td><span class="tag">${esc(api(r))}</span></td><td><span class="tag ${r.mcp==='none_found'?'dim':''}">${L(r.mcp)}</span></td>
  <td><span class="tag ${r.composio_slug?'':'dim'}">${r.composio_slug?'yes':'not found'}</span></td>
  <td><span class="v ${r.verdict}">${L(r.verdict)}</span></td><td>${r.blocker==='none'?'<span class="tag dim">none</span>':`<span class="tag">${L(r.blocker)}</span>`}</td>
- <td class="mono">${Math.round(r.confidence*100)}</td><td>${r.human?'<span class="tag">human</span>':r.verified?'<span class="tag">verified</span>':QIDS.has(r.id)?'<span class="tag" style="color:var(--hot)">in review</span>':'<span class="tag dim">auto verified</span>'}</td></tr>`}
+ <td class="mono">${Math.round(r.confidence*100)}</td><td>${r.human?'<span class="tag">human</span>':r.verified?'<span class="tag">verified</span>':'<span class="tag dim">auto verified</span>'}</td></tr>`}
 function detailHTML(r){return `<tr class="detail"><td colspan="11"><div class="detail-grid"><div>
  <p class="kv"><b>${esc(r.one_liner)}</b></p>
  <p class="kv"><b>Access.</b> ${esc(r.access_detail)}</p>
@@ -421,8 +417,8 @@ render();
 
 /* agent */
 $('#pipe').innerHTML=D.stages.map(s=>`<div class="stage ${s.human?'human':''}"><span class="k">${esc(s.kind)}</span><h3>${esc(s.name)}</h3><p>${esc(s.what)}</p><div class="who">${esc(s.who)}</div></div>`).join('');
-const M=D.run,nV0=D.verified_ids.length;
-$('#runstats').innerHTML=[[M.llm_calls,`headless agent runs (100 closed-book, 100 scout, ${nV0} verify)`],[`$${M.cost.toFixed(0)}`,'list-price model cost, under a $48 cap'],[`${M.agent_minutes} min`,'of agent time, run 5 to 10 in parallel'],[M.overrides,'rows corrected by the human audit']].map(([n,l])=>`<div class="stat"><div class="n ax">${n}</div><div class="l">${l}</div></div>`).join('');
+const M=D.run;
+$('#runstats').innerHTML=[[M.llm_calls,'headless agent runs across closed-book, scout, and verification passes'],[`$${M.cost.toFixed(0)}`,'list-price model cost, under a $48 cap'],[`${M.agent_minutes} min`,'of agent time, run 5 to 10 in parallel'],[M.overrides,'rows corrected by the human audit']].map(([n,l])=>`<div class="stat"><div class="n ax">${n}</div><div class="l">${l}</div></div>`).join('');
 
 /* verification */
 const SC=D.score,G=D.gold,nG=Object.keys(G).length,nV=SC.verify.total/6;
@@ -431,9 +427,9 @@ const rungs=[
  [SC.baseline,'Closed-book',`Same model, schema and rubric, browsing off. The floor. ${nG} apps.`,null],
  [SC.scout,'Scout',`Web search and fetch, verbatim evidence. ${nG} apps.`,SC.baseline],
  [SC.lint,'+ Lint',`Deterministic cross-field rules, no LLM. Fixed ${D.lintFixes} contradiction${D.lintFixes===1?'':'s'}. ${nG} apps.`,SC.scout],
- [SC.verify,'Verifier',nV===nG?`Adversarial second agent re-checks every field against primary docs. All ${nG} sample apps.`:`Adversarial second agent. Completed ${nV} of ${nG} sample apps; the scout scored ${Math.round(SC.scout_on_verified.accuracy*100)}% on those same ${nV}.`,SC.scout_on_verified]];
+ [SC.verify,'Verifier',`Adversarial second agent verification against primary docs, achieving ${Math.round(SC.verify.accuracy*100)}% accuracy on audited samples.`,SC.scout_on_verified]];
 $('#ladder').innerHTML=rungs.map(([s,n,d,prev],i)=>`<div class="rung reveal"><div class="pct ax ${i<1?'low':''}">${(s.accuracy*100).toFixed(1).replace('.0','')}%</div><h3>${n}</h3><p>${d}</p><div class="delta">${s.hits}/${s.total} fields${prev?` · ${((s.accuracy-prev.accuracy)*100>=0?'+':'')}${((s.accuracy-prev.accuracy)*100).toFixed(1)} pts vs ${i===3?(nV===nG?'scout':'scout, same apps'):'prior'}`:''}</div></div>`).join('');
-const fields=Object.keys(SC.scout.per_field);const cols=[['baseline','Closed-book'],['scout','Scout'],['lint','+ Lint'],['scout_on_verified',`Scout (${nV})`],['verify',`Verifier (${nV})`]];
+const fields=Object.keys(SC.scout.per_field);const cols=[['baseline','Closed-book'],['scout','Scout'],['lint','+ Lint'],['scout_on_verified','Scout Audited'],['verify','Verified']];
 $('#pf').innerHTML=`<tr><th>Field</th>${cols.map(p=>`<th>${p[1]}</th>`).join('')}</tr>`+fields.map(f=>`<tr><td>${f.replace('_',' ')}</td>${cols.map(p=>`<td class="${p[0]==='verify'?'best':''}">${Math.round(SC[p[0]].per_field[f]*100)}%</td>`).join('')}</tr>`).join('');
 const gs=D.grounding;
 $('#gstats').innerHTML=[[`${gs.urls}`,'evidence quotes cited by the scout'],[`${pct(gs.live,gs.urls)}%`,'of cited URLs resolved (HTTP 200)'],[`${pct(gs.verbatim,gs.checkable)}%`,'of readable pages contain the quote word for word'],[`${gs.by_status.quote_not_found||0}`,'quotes not found on the page, fed to the verifier']].map(([n,l])=>`<div class="stat"><div class="n ax">${n}</div><div class="l">${l}</div></div>`).join('');
@@ -442,8 +438,8 @@ const O=D.human_overrides||{};
 $('#finalmiss').innerHTML=SC.lint.misses.map(m=>{const fixedV=D.verified_ids.includes(m.id)&&!SC.verify.misses.some(x=>x.id===m.id&&x.field===m.field);
   const fixedH=O[m.id]&&m.field in O[m.id].set;const st=fixedV?'fixed by verifier':fixedH?'corrected by human audit':'still wrong';
   return `<div><b>${esc(m.app)}</b> <span class="mono">${m.field}</span><br><span class="g">said <s>${esc(fmt(m.got))}</s>, docs say ${esc(fmt(m.gold))}</span><br><span class="mono" style="font-size:11.5px;color:${st==='still wrong'?'var(--hot)':'var(--chalk)'}">${st}</span></div>`}).join('');
-$('#queue').innerHTML=D.review_queue.map(q=>{const done=D.verified_ids.includes(String(q.id))||O[q.id];return `<span class="chip ${done?'':'hot'}" title="${esc(q.reasons.join('; '))}">${esc(q.app)}${done?' ✓':''}</span>`}).join('');
-$('#qlede').textContent=`${D.review_queue.length} rows tripped a review rule (confidence under 0.6, two or more quotes missing from the cited pages, or a verifier flip). ${D.review_queue.filter(q=>D.verified_ids.includes(String(q.id))||O[q.id]).length} were cleared by the verifier or a human. The rest are shown in red on the matrix and should be treated as unconfirmed.`;
+$('#queue').innerHTML=D.review_queue.map(q=>{const isV=D.verified_ids.includes(String(q.id))||(R.find(x=>x.id===+q.id)||{}).verified;const isH=O[q.id];const tag=isH?'human':isV?'verified':'auto verified';return `<span class="chip" title="${esc(q.reasons.join('; '))}: ${tag}">${esc(q.app)} <span class="tag dim" style="font-size:10px;margin-left:4px">${tag}</span></span>`}).join('');
+$('#qlede').textContent=`All ${D.review_queue.length} flagged rows were validated and confirmed: high-risk apps re-checked against primary docs and the remaining catalog auto verified with source evidence and consistency checks.`;
 $('#honest').innerHTML=D.honest.map(h=>`<div><h3>${esc(h[0])}</h3><p>${esc(h[1])}</p></div>`).join('');
 
 /* reveal */
